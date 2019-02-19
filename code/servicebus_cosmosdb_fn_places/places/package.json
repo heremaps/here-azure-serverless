@@ -1,0 +1,26 @@
+{
+  "name": "places",
+  "version": "1.0.0",
+  "description": "HERE maps api for : places",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "map",
+    "places",
+    "here",
+    "location"
+  ],
+  "engines": {
+    "node": "8.11.1"
+  },
+  "author": "navin mistry",
+  "license": "ISC",
+  "dependencies": {
+    "@azure/cosmos": "^2.1.2",
+    "axios": "^0.18.0",
+    "azure-function-express": "^2.0.0",
+    "express": "^4.16.4"
+  }
+}

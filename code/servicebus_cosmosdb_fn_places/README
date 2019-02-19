@@ -1,0 +1,12 @@
+while creating zip, we must include below mentioned file/dir alongwith function code 
+
+( this is for service bus extension  which azure function will use.)
+extensions.csproj
+bin
+
+
+effectively function code zip need to contain three things ( rest all folder can be ignored for zip creation )
+places
+bin
+extensions.csproj
+
