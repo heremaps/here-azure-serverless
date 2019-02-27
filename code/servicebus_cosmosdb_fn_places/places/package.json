@@ -1,5 +1,5 @@
 {
-  "name": "places",
+  "name": "servicebus-places",
   "version": "1.0.0",
   "description": "HERE maps api for : places",
   "main": "index.js",
