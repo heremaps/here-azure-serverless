@@ -6,21 +6,32 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "author": {
+    "name": "HERE Europe B.V.",
+    "url": "https://here.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "ssh://gerrit.it.here.com:29418/devrel/azure"
+  },
+  "bugs": {
+    "url": "https://saeljira.it.here.com/projects/DEVCHANNEL"
+  },
   "keywords": [
     "map",
     "places",
-    "here",
-    "location"
+    "HERE",
+    "location",
+    "HERE Technologies"
   ],
   "engines": {
     "node": "8.11.1"
   },
-  "author": "navin mistry",
-  "license": "ISC",
   "dependencies": {
     "@azure/cosmos": "^2.1.2",
     "axios": "^0.18.0",
     "azure-function-express": "^2.0.0",
     "express": "^4.16.4"
-  }
+  },
+  "license": "SEE LICENSE IN LICENSE"
 }
