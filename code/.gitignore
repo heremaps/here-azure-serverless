@@ -4,6 +4,7 @@ csx
 .vs
 edge
 Publish
+.vscode
 
 *.user
 *.suo
@@ -23,6 +24,7 @@ appsettings.json
 local.settings.json
 
 node_modules
+dist
 
 # Local python packages
 .python_packages/
