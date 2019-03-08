@@ -6,17 +6,6 @@
     "hereAPP_CODE": {
       "type": "string"
     },
-    "hereEnvironment": {
-      "type": "string",
-      "defaultValue": "CIT",
-      "allowedValues": [
-        "CIT",
-        "LIVE"
-      ],
-      "metadata": {
-        "description": "HERE environment (test/production)"
-      }
-    },
     "serviceBusNamespaceName": {
       "type": "string",
       "metadata": {
@@ -75,7 +64,7 @@
       "metadata": {
         "description": "Public accessible URL for Zip containing function code."
       },
-      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/0.1.0/servicebus_cosmosdb_fn_places.zip"
+      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/1.0.1/serviceBusTriggerFunctions.zip"
     }
   },
   "variables": {
@@ -147,10 +136,6 @@
             {
               "name": "WEBSITE_NODE_DEFAULT_VERSION",
               "value": "8.11.1"
-            },
-            {
-              "name": "HERE_ENVIRONMENT",
-              "value": "[concat(toLower(parameters('hereEnvironment')))]"
             },
             {
               "name": "HERE_APP_CODE",

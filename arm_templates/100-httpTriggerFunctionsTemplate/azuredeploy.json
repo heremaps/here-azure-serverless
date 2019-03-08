@@ -1,23 +1,12 @@
 {
   "parameters": {
-    "hereEnvironment": {
-      "type": "string",
-      "defaultValue": "CIT",
-      "allowedValues": [
-        "CIT",
-        "LIVE"
-      ],
-      "metadata": {
-        "description": "HERE environment (test/production)"
-      }
-    },
     "hereAPP_ID": {
       "type": "string"
     },
     "hereAPP_CODE": {
       "type": "string"
     },
-   
+
     "storageAccountType": {
       "type": "string",
       "defaultValue": "Standard_LRS",
@@ -33,15 +22,15 @@
     },
     "storageName": {
       "type": "string",
-      "defaultValue" : "[concat('storage', uniqueString(resourceGroup().id))]"
+      "defaultValue": "[concat('storage', uniqueString(resourceGroup().id))]"
     },
     "appName": {
-        "type": "string",
-        "defaultValue": "[concat('app', uniqueString(resourceGroup().id))]",
-        "metadata": {
-          "description": "Globally Unique app_name"
-        }
-      },
+      "type": "string",
+      "defaultValue": "[concat('app', uniqueString(resourceGroup().id))]",
+      "metadata": {
+        "description": "Globally Unique app_name"
+      }
+    },
     "location": {
       "type": "string",
       "defaultValue": "[resourceGroup().location]",
@@ -54,22 +43,23 @@
       "metadata": {
         "description": "Public accessible URL for Zip containing function code."
       },
-      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/0.1.0/http_fn_places.zip"
+      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/1.0.1/httpTriggerFunctions.zip"
     }
   },
   "variables": {
-        "offerType": "Standard"
+    "offerType": "Standard"
   },
-  "resources": [
-    {
+  "resources": [{
       "apiVersion": "2016-08-01",
       "name": "[parameters('appName')]",
       "type": "Microsoft.Web/sites",
       "properties": {
         "name": "[parameters('appName')]",
         "siteConfig": {
-          "appSettings": [
-            {
+          "cors": {
+            "allowedOrigins": ["*"]
+          },
+          "appSettings": [{
               "name": "AzureWebJobsDashboard",
               "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
             },
@@ -94,10 +84,6 @@
               "value": "8.11.1"
             },
             {
-              "name": "HERE_ENVIRONMENT",
-              "value": "[concat(toLower(parameters('hereEnvironment')))]"
-            },
-            {
               "name": "HERE_APP_CODE",
               "value": "[parameters('hereAPP_CODE')]"
             },
@@ -109,19 +95,17 @@
         },
         "clientAffinityEnabled": false
       },
-      "resources": [
-        {
-          "name": "MSDeploy",
-          "type": "extensions",
-          "apiVersion": "2015-08-01",
-          "dependsOn": [
-            "[resourceId('Microsoft.Web/Sites', parameters('appName'))]"
-          ],
-          "properties": {
-            "packageUri": "[parameters('msdeployPackageUrl')]"
-          }
+      "resources": [{
+        "name": "MSDeploy",
+        "type": "extensions",
+        "apiVersion": "2015-08-01",
+        "dependsOn": [
+          "[resourceId('Microsoft.Web/Sites', parameters('appName'))]"
+        ],
+        "properties": {
+          "packageUri": "[parameters('msdeployPackageUrl')]"
         }
-      ],
+      }],
       "dependsOn": [
         "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
       ],
@@ -134,10 +118,11 @@
       "name": "[parameters('storageName')]",
       "location": "[parameters('location')]",
       "properties": {
-        "accountType" : "[parameters('storageAccountType')]"
+        "accountType": "[parameters('storageAccountType')]"
       }
     }
   ],
   "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
   "contentVersion": "1.0.0.0"
 }
+

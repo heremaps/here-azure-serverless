@@ -1,16 +1,30 @@
-# here_azure
-Azure ARM template and functions for HERE Api
+# ARM templates 
+This section contains ARM templates which are used for provision required resources and deploy functions.
 
-There are two examples    
+## Details of the templates :
 
-1. http_fn_places  
+### 1. 100-httpTriggerFunctionsTemplate
+
 This template creates a standard storage account and a function app.  
-additionally it deploys a HTTP trigger function for "HERE places" API.  
+additionally it deploys HTTP trigger functions for 7 Here APIs.  
 
 
-2. servicebus_cosmosdb_fn_places  
-This template creates "Servicebus", "cosmosDB", "function app"   
-additionally it deploys a Servicebus trigger function which will received message from incoming queue  
+
+### 2. 101-serviceBusTriggerFunctionsTemplate  
+
+This template provisions "Servicebus", "cosmosDB", "function app"   
+additionally it deploys Servicebus trigger functions for 7 Here APIs  
 once the function executes , it stores its output in cosmosDB instance.  
+
+
+## Supported List of APIs
+
+1. Geocoder
+2. Routing
+3. Places
+4. Positioning
+5. Map Image
+6. Map Tiles
+7. Fleet Telematics
 
 
