@@ -1,10 +1,17 @@
+
 {
   "parameters": {
     "hereAPP_ID": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "For HERE Credentials, refer https://developer.here.com"
+      }
     },
     "hereAPP_CODE": {
-      "type": "string"
+      "type": "string",
+      "metadata": {
+        "description": "For HERE Credentials, refer https://developer.here.com"
+      }
     },
 
     "storageAccountType": {
