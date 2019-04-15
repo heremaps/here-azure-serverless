@@ -1,0 +1,13 @@
+{
+  "bindings": [
+    {
+      "name": "eventHubMsg",
+      "type": "eventHubTrigger",
+      "direction": "in",
+      "eventHubName": "here_api_eventhub",
+      "connection": "HERE_EVENTHUB_NS_CONNECTIONSTRING",
+      "consumerGroup": "$Default"
+    }
+  ]
+}
+
