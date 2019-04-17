@@ -2,7 +2,7 @@
 
 Deploys "Map Tile" Here API as  HTTP trigger serverless function.
 
- <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fnavinmistry%2Fhere_azure%2Fmaster%2Farm_templates%2F109-httpTriggerFunctionTemplate-MapTile%2Fazuredeploy.json" target="_blank">
+<a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheremaps%2Fhere-azure-serverless%2Fmaster%2FarmTemplates%2F109-hlsARMTemplateServerlessFunctionMapTile%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>
 </a>
 

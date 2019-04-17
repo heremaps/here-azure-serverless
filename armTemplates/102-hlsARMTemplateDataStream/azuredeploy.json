@@ -67,7 +67,7 @@
       "metadata": {
         "description": "Public accessible URL for Zip containing function code."
       },
-      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/1.0.1/eventHubTriggerFunctions.zip"
+      "defaultValue": "http://<...>/hlsTemplateDataStream.zip"
     }
   },
   "variables": {

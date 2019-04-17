@@ -26,8 +26,8 @@
        
     },
     "variables": {
-        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/eventHubTriggerFnTemplate.json')]" ,
-        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/eventHubTriggerFunctions.zip')]"
+        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]" ,
+        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateDataStream.zip')]"
 
     },
     "resources": [

@@ -20,8 +20,8 @@
        
     },
     "variables": {
-        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/httpTriggerFnTemplate.json')]" ,
-        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/httpTriggerFunctions.zip')]"
+        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]" ,
+        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateServerlessFunction.zip')]"
 
     },
     "resources": [

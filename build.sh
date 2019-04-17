@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #Build script for azure HLS work.
-azureHLSWorkspaceDir="/Users/navin/my_drive/CODE/__gerrit/azure"
+azureHLSWorkspaceDir="`pwd`"
 zipCommandPrefix=" zip -rq  "
 zipCommandSuffix='  -x "**/.DS_Store"  -x "*/.DS_Store" -x ".DS_Store" -x "*.DS_Store"'
 echo "WS Dir : [$azureHLSWorkspaceDir]"

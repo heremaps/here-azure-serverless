@@ -48,9 +48,9 @@
     "functionZipPackageUrl": {
       "type": "string",
       "metadata": {
-        "description": "Public accessible URL for Zip containing function code."
+        "description": "Public accessible URL for ZIP containing function code."
       },
-      "defaultValue": "https://github.com/navinmistry/here_azure/releases/download/1.0.1/httpTriggerFunctions.zip"
+      "defaultValue": "http://<...>/hlsTemplateServerlessFunction.zip"
     }
   },
   "variables": {
