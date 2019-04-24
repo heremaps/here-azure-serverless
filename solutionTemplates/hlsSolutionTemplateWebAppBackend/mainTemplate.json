@@ -8,74 +8,66 @@
         "hereAPP_CODE": {
             "type": "string"
         },
-        "serviceBusNamespaceName": {
-            "type": "string"
-        },
-        "serviceBusSku": {
-            "type": "string"
-        },
-        "cosmosDBAccountName": {
-            "type": "string"
-        },
         "storageAccountType": {
             "type": "string"
         },
         "storageName": {
             "type": "string"
         },
-        "functionAppName": {
+        "storageAccountNewOrExisting": {
+            "type": "string"
+        },
+        "storageAccountExistingRG": {
+            "type": "string"
+        },
+        "location": {
             "type": "string"
         }
-       
-    },
-    "variables": {
-        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]" ,
-        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateWebAppBackend.zip')]"
 
     },
-    "resources": [
-        {
-            "type": "Microsoft.Resources/deployments",
-            "apiVersion": "2018-02-01",
-            "name": "pid-42755d19-4ad3-5fc0-a887-72ea2006a990",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('nestedTemplateUri')]"
+    "variables": {
+        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]",
+        "functionZipPackageUrl": "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateWebAppBackend.zip')]"
+
+    },
+    "resources": [{
+        "type": "Microsoft.Resources/deployments",
+        "apiVersion": "2018-02-01",
+        "name": "pid-42755d19-4ad3-5fc0-a887-72ea2006a990",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "contentVersion": "1.0.0.0",
+                "uri": "[variables('nestedTemplateUri')]"
+            },
+            "parameters": {
+                "hereAPP_ID": {
+                    "value": "[parameters('hereAPP_ID')]"
                 },
-                "parameters": {
-                    "hereAPP_ID": {
-                        "value": "[parameters('hereAPP_ID')]"
-                    },
-                    "hereAPP_CODE": {
-                        "value": "[parameters('hereAPP_CODE')]"
-                    },
-                    "serviceBusNamespaceName": {
-                        "value": "[parameters('serviceBusNamespaceName')]"
-                    },
-                    "serviceBusSku": {
-                        "value": "[parameters('serviceBusSku')]"
-                    },
-                    "cosmosDBAccountName": {
-                        "value": "[parameters('cosmosDBAccountName')]"
-                    },
-                    "storageAccountType": {
-                        "value": "[parameters('storageAccountType')]"
-                    },
-                    "storageName": {
-                        "value": "[parameters('storageName')]"
-                    },
-                    "functionAppName": {
-                        "value": "[parameters('functionAppName')]"
-                    },
-                    "functionZipPackageUrl": {
-                        "value": "[variables('functionZipPackageUrl')]"
-                    }
+                "hereAPP_CODE": {
+                    "value": "[parameters('hereAPP_CODE')]"
+                },
+                "storageAccountType": {
+                    "value": "[parameters('storageAccountType')]"
+                },
+                "storageName": {
+                    "value": "[parameters('storageName')]"
+                },
+                "storageAccountNewOrExisting": {
+                    "value": "[parameters('storageAccountNewOrExisting')]"
+                },
+                "storageAccountExistingRG": {
+                    "value": "[parameters('storageAccountExistingRG')]"
+                },
+                "functionZipPackageUrl": {
+                    "value": "[variables('functionZipPackageUrl')]"
+                },
+                "location": {
+                    "value": "[parameters('location')]"
                 }
             }
         }
-    ],
+    }],
     "outputs": {
         "ServiceBusConnectionString": {
             "type": "string",
@@ -111,4 +103,3 @@
         }
     }
 }
-

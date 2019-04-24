@@ -8,68 +8,65 @@
         "hereAPP_CODE": {
             "type": "string"
         },
-        "eventHubNamespaceName": {
-            "type": "string"
-        },
-        "cosmosDBAccountName": {
-            "type": "string"
-        },
         "storageAccountType": {
             "type": "string"
         },
         "storageName": {
             "type": "string"
         },
-        "functionAppName": {
+        "storageAccountNewOrExisting": {
+            "type": "string"
+        },
+        "storageAccountExistingRG": {
+            "type": "string"
+        },
+        "location": {
             "type": "string"
         }
-       
     },
     "variables": {
-        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]" ,
-        "functionZipPackageUrl" : "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateDataStream.zip')]"
+        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]",
+        "functionZipPackageUrl": "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateDataStream.zip')]"
 
     },
-    "resources": [
-        {
-            "apiVersion": "2018-02-01",
-            "name": "pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b", 
-            "type": "Microsoft.Resources/deployments",
-            "properties": {
-                "mode": "Incremental",
-                "templateLink": {
-                    "contentVersion": "1.0.0.0",
-                    "uri": "[variables('nestedTemplateUri')]"
+    "resources": [{
+        "apiVersion": "2018-02-01",
+        "name": "pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "contentVersion": "1.0.0.0",
+                "uri": "[variables('nestedTemplateUri')]"
+            },
+            "parameters": {
+                "hereAPP_ID": {
+                    "value": "[parameters('hereAPP_ID')]"
                 },
-                "parameters": {
-                    "hereAPP_ID": {
-                        "value": "[parameters('hereAPP_ID')]"
-                    },
-                    "hereAPP_CODE": {
-                        "value": "[parameters('hereAPP_CODE')]"
-                    },
-                    "eventHubNamespaceName": {
-                        "value": "[parameters('eventHubNamespaceName')]"
-                    },
-                    "cosmosDBAccountName": {
-                        "value": "[parameters('cosmosDBAccountName')]"
-                    },
-                    "storageAccountType": {
-                        "value": "[parameters('storageAccountType')]"
-                    },
-                    "storageName": {
-                        "value": "[parameters('storageName')]"
-                    },
-                    "functionAppName": {
-                        "value": "[parameters('functionAppName')]"
-                    },
-                    "functionZipPackageUrl": {
-                        "value": "[variables('functionZipPackageUrl')]"
-                    }
+                "hereAPP_CODE": {
+                    "value": "[parameters('hereAPP_CODE')]"
+                },
+                "storageAccountType": {
+                    "value": "[parameters('storageAccountType')]"
+                },
+                "storageName": {
+                    "value": "[parameters('storageName')]"
+                },
+                "storageAccountNewOrExisting": {
+                    "value": "[parameters('storageAccountNewOrExisting')]"
+                },
+                "storageAccountExistingRG": {
+                    "value": "[parameters('storageAccountExistingRG')]"
+                },
+                "functionZipPackageUrl": {
+                    "value": "[variables('functionZipPackageUrl')]"
+                },
+                "location": {
+                    "value": "[parameters('location')]"
                 }
             }
         }
-    ],
+    }],
     "outputs": {
         "defaultNamespaceConnectionString": {
             "type": "string",
@@ -101,4 +98,3 @@
         }
     }
 }
-

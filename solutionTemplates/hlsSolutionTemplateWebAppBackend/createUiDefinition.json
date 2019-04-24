@@ -1,255 +1,86 @@
 {
-    "handler": "Microsoft.Compute.MultiVm",
-    "version": "0.1.2-preview",
-    "parameters": {
-        "basics": [
-            {}
-        ],
-        "steps": [
-          {
-            "name": "hereConfig",
-            "label": "HERE Credentials",
-            "subLabel": {
-                "preValidation": "Configure HERE credentials",
-                "postValidation": "Done"
-            },
-            "bladeTitle": "HERE Credentials",
-            "elements": [
-              {
-                "name": "text1",
-                "type": "Microsoft.Common.InfoBox",
-                "visible": true,
-                "options": {
-                  "icon": "Info",
-                  "text": "Get your HERE App ID and App Code by Signing-up for FREE at https://developer.here.com",
-                  "uri": "https://developer.here.com/ref/azure_marketplace_backend?create=Freemium-Basic"
-                }
-              },
-              
-                {
-                  "name": "hereAPP_ID",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "HERE App ID",
-                  "toolTip" : "HERE App ID (https://developer.here.com/faqs#access-control)",
-                  "visible": true,
-                  "constraints": {
-                    "required": true
-                  }
-                },
-                {
-                  "name": "hereAPP_CODE",
-                  "type": "Microsoft.Common.TextBox",
-                  "label": "HERE App Code",
-                  "toolTip" : "HERE App Code (https://developer.here.com/faqs#access-control)",
-                  "visible": true,
-                  "constraints": {
-                    "required": true
-                  }
-                }
-            ]
-        },
-            {
-                "name": "serviceBusConfig",
-                "label": "Service Bus settings",
-                "subLabel": {
-                    "preValidation": "Configure ServiceBus",
-                    "postValidation": "Done"
-                },
-                "bladeTitle": "Service Bus settings",
-                "elements": [
-                  {
-                    "name": "text3",
-                    "type": "Microsoft.Common.TextBlock",
-                    "visible": true,
-                    "options": {
-                      "text" : "Service Bus Namespace. A random string is pre-poulated, edit if required. A client will send message to this servicebus."
-                    }
-                  },
-                  {
-                    "name": "serviceBusNamespaceName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Service Bus Namespace",
-                    "defaultValue" : "[concat('sbus', skip( replace( guid(),  '-', ''), 17)) ]",
-                    "toolTip" : "Service Bus Namespace name.",
-                    "visible": true,
-                    "constraints": {
-                      "required": true
-                    }
-                },
-                {
-                  "name": "text4",
-                  "type": "Microsoft.Common.TextBlock",
-                  "visible": true,
-                  "options": {
-                    "text" : "Choose Service Bus tier.( Basic, standard, and premium tiers )",
-                    "link": {
-                      "label": "Learn more",
-                      "uri": "https://azure.microsoft.com/en-ca/pricing/details/service-bus/"
-                  }
-                }
-                },
-                    {
-                        "name": "serviceBusSku",
-                        "type": "Microsoft.Common.DropDown",
-                        "label": "Service Bus Plan",
-                        "defaultValue": "Standard",
-                        "toolTip": "",
-                        "constraints": {
-                          "allowedValues": [
-                            {
-                              "label": "Basic",
-                              "value": "Basic"
-                            },
-                            {
-                              "label": "Standard",
-                              "value": "Standard"
-                            },
-                            {
-                                "label": "Premium",
-                                "value": "Premium"
-                            }
-                          ],
-                          "required": true
-                        },
-                        "visible": true
-                      }
-                ]
-            },
-            {
-              "name": "cosmosDBConfig",
-              "label": "Cosmos DB settings",
-              "subLabel": {
-                  "preValidation": "Configure CosmosDB",
-                  "postValidation": "Done"
-              },
-              "bladeTitle": "Cosmos DB settings",
-              "elements": [
-                  {
-                      "name": "text4",
-                      "type": "Microsoft.Common.TextBlock",
-                      "visible": true,
-                      "options": {
-                        "text" : "Cosmos DB Account (SQL Api). A random string is pre-poulated, edit if required. This is required for storing result of API calls"
-                      }
-                    },
-                  {
-                      "name": "cosmosDBAccountName",
-                      "type": "Microsoft.Common.TextBox",
-                      "label": "cosmos DB Account Name",
-                      "defaultValue" : "[concat('cosmosdb', skip( replace( guid(),  '-', ''), 17)) ]",
-                      "toolTip" : "Cosmos DB Account Name.",
-                      "visible": true,
-                      "constraints": {
-                        "required": true
-                      }
-                  }
-              ]
-          },
-            {
-              "name": "storageConfig",
-              "label": "Storage settings",
-              "subLabel": {
-                  "preValidation": "Configure the Storage",
-                  "postValidation": "Done"
-              },
-              "bladeTitle": "Storage settings",
-              "elements": [
-                {
-                  "name": "text3",
-                  "type": "Microsoft.Common.TextBlock",
-                  "visible": true,
-                  "options": {
-                    "text" : "Storage account. A random string is pre-poulated, edit if required. Storage is required to keep code for functions, logs ,deployment details etc."
-                  }
-                },
-                {
-                    "name": "storageName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Storage Account Name",
-                    "defaultValue" : "[concat('storage', skip( replace( guid(),  '-', ''), 17)) ]",
-                    "toolTip" : "Provide a name for Storage Account, it will be validated upon submitting the request, an unique storage name is pre-populated",
-                    "visible": true,
-                    "constraints": {
-                      "required": true
-                    }
-                },
-                {
-                    "name": "storageAccountType",
-                    "type": "Microsoft.Common.DropDown",
-                    "label": "Storage Account Type",
-                    "defaultValue": "Standard_LRS",
-                    "toolTip": "Choose a redundancy type ( local/zone/geo ) , Refer : https://docs.microsoft.com/en-us/azure/storage/common/storage-redundancy for more details.",
-                    "constraints": {
-                      "allowedValues": [
-                        {
-                          "label": "Standard_LRS",
-                          "value": "Standard_LRS"
-                        },
-                        {
-                          "label": "Standard_GRS",
-                          "value": "Standard_GRS"
-                        },
-                        {
-                          "label": "Standard_ZRS",
-                          "value": "Standard_ZRS"
-                        },
-                        {
-                          "label": "Premium_LRS",
-                          "value": "Premium_LRS"
-                        }
-                      ],
-                      "required": true
-                    },
-                    "visible": true
-                  }
-              ]
-          },
-          {
-              "name": "functionAppConfig",
-              "label": "Function App settings",
-              "subLabel": {
-                  "preValidation": "Configure the Function App Name",
-                  "postValidation": "Done"
-              },
-              "bladeTitle": "Function App settings",
-              "elements": [
-                {
-                  "name": "text4",
-                  "type": "Microsoft.Common.TextBlock",
-                  "visible": true,
-                  "options": {
-                    "text" : "Globally unique function-app name. A random string is pre-poulated, edit if required."
-                  }
-                },
-                {
-                    "name": "functionAppName",
-                    "type": "Microsoft.Common.TextBox",
-                    "label": "Function App Name",
-                    "defaultValue" : "[concat('fn-app', skip( replace( guid(),  '-', ''), 17)) ]",
-                    "toolTip" : "Function App Name, it will be create as https://{{funcAppname}}.azurewebsites.net",
-                    "visible": true,
-                    "constraints": {
-                      "required": true
-                    }
-                }
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
 
-              ]
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [],
+    "steps": [{
+      "name": "hereConfig",
+      "label": "HERE Configuration",
+      "subLabel": {
+        "preValidation": "Configure HERE credentials, storage",
+        "postValidation": "Done"
+      },
+      "bladeTitle": "HERE Configuration",
+      "elements": [{
+          "name": "text1",
+          "type": "Microsoft.Common.InfoBox",
+          "visible": true,
+          "options": {
+            "icon": "Info",
+            "text": "Get your HERE App ID and App Code by Signing-up for FREE at https://developer.here.com",
+            "uri": "https://developer.here.com/ref/azure_marketplace_hlsfuntions?create=Freemium-Basic"
           }
+        },
 
-        ],
-        "outputs": {
-            "hereAPP_ID": "[steps('hereConfig').hereAPP_ID]",
-            "hereAPP_CODE": "[steps('hereConfig').hereAPP_CODE]",
-
-            "serviceBusNamespaceName": "[steps('serviceBusConfig').serviceBusNamespaceName]",
-            "serviceBusSku": "[steps('serviceBusConfig').serviceBusSku]",
-
-            "cosmosDBAccountName": "[steps('cosmosDBConfig').cosmosDBAccountName]",
-
-            "storageName": "[steps('storageConfig').storageName]",
-            "storageAccountType": "[steps('storageConfig').storageAccountType]",
-            
-            "functionAppName": "[steps('functionAppConfig').functionAppName]"
+        {
+          "name": "hereAPP_ID",
+          "type": "Microsoft.Common.TextBox",
+          "label": "HERE App ID",
+          "toolTip": "HERE App ID (https://developer.here.com/faqs#access-control)",
+          "visible": true,
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "hereAPP_CODE",
+          "type": "Microsoft.Common.TextBox",
+          "label": "HERE App Code",
+          "toolTip": "HERE App Code (https://developer.here.com/faqs#access-control)",
+          "visible": true,
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "storageConfig",
+          "type": "Microsoft.Storage.StorageAccountSelector",
+          "label": "Storage account",
+          "toolTip": "",
+          "defaultValue": {
+            "name": "[concat('storage', skip( replace( guid(),  '-', ''), 17)) ]",
+            "type": "Standard_LRS"
+          },
+          "constraints": {
+            "allowedTypes": [
+              "Standard_LRS",
+              "Standard_GRS",
+              "Standard_RAGRS",
+              "Standard_ZRS",
+              "Premium_LRS",
+              "Premium_ZRS"
+            ]
+          },
+          "options": {
+            "hideExisting": false
+          },
+          "visible": true
         }
+
+      ]
+    }],
+    "outputs": {
+      "location": "[location()]",
+
+      "hereAPP_ID": "[steps('hereConfig').hereAPP_ID]",
+      "hereAPP_CODE": "[steps('hereConfig').hereAPP_CODE]",
+
+      "storageName": "[steps('hereConfig').storageConfig.name]",
+      "storageAccountType": "[steps('hereConfig').storageConfig.type]",
+      "storageAccountNewOrExisting": "[steps('hereConfig').storageConfig.newOrExisting]",
+      "storageAccountExistingRG": "[steps('hereConfig').storageConfig.resourceGroup]"
     }
+  }
 }
