@@ -75,6 +75,19 @@ mkdir -p dist/deployables/azureMarketplace
 mkdir -p dist/deployables/azureMarketplacePublishing
 mkdir -p dist/deployables/serverlesslibrary
 
+#Copy LICENSE file in root of every deployable directory
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureMarketplace/hlsTemplateDataStream
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureMarketplace/hlsTemplateServerlessFunction
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureMarketplace/hlsTemplateWebAppBackend
+
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIFleetTelematics
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIGeocoder
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapImage
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting
+
 #Copy code from respective places to newly create directories
 
 #1.1 Building ARM Template "DataStreams"
