@@ -7,7 +7,7 @@ Deploys collection of 7 Here APIs as  HTTP trigger serverless functions.
 </a>
 
 This template does the following things   
-	1. Creates standard storage account.   
+	1. Creates standard storage account/use existing storage.   
 	2. Creates a function app.   
 	3. Creates 7 HTTP trigger functions.  
 

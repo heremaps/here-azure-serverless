@@ -7,7 +7,7 @@ Deploys "Fleet Telematics" Here API as  HTTP trigger serverless function.
 </a>
 
 This template does the following things   
-	1. Creates standard storage account.   
+	1. Creates standard storage account/use existing storage.   
 	2. Creates a function app.   
 	3. Creates "Fleet Telematics" HTTP trigger function.  
 

@@ -7,9 +7,9 @@ Creates a single eventHub triggered function catering to 7 here location suite A
 </a>
 
 This template does the following thing   
-	1. Creates a eventhub namespace.  
+	1. Creates a eventhub namespace and eventhub "here_api_eventhub".  
 	2. Creates a cosmos DB (SQL) instance.  
-	3. Creates a standard storage account.  
+	3. Creates a standard storage account/use existing storage.  
 	4. Creates a function app.  
 	5. deploys event-hub triggered function  which caters to 7 HERE APIs.  
 
