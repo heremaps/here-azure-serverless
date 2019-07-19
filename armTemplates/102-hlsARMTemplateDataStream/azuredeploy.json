@@ -1,0 +1,287 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "hereAPP_ID": {
+            "type": "String"
+        },
+        "hereAPP_CODE": {
+            "type": "String"
+        },
+        "StorageAccountNewOrExisting": {
+            "allowedValues": [
+                "new",
+                "existing"
+            ],
+            "type": "String"
+        },
+        "storageAccountExistingRG": {
+            "type": "String"
+        },
+        "storageAccountType": {
+            "allowedValues": [
+                "Standard_LRS",
+                "Standard_GRS",
+                "Standard_RAGRS",
+                "Standard_ZRS",
+                "Premium_LRS",
+                "Premium_ZRS"
+            ],
+            "type": "String"
+        },
+        "storageName": {
+            "type": "String"
+        },
+        "location": {
+            "type": "String"
+        },
+        "functionZipPackageUrl": {
+            "type": "String"
+        }
+    },
+    "variables": {
+        "eventHubName": "here_api_eventhub",
+        "offerType": "Standard",
+        "defaultSASKeyName": "RootManageSharedAccessKey",
+        "eventHubNamespaceName": "[concat('hlseventhub', '-', uniqueString(resourceGroup().id))]",
+        "cosmosDBAccountName": "[concat('hlsdb', '-', uniqueString(resourceGroup().id))]",
+        "authRuleResourceId": "[resourceId('Microsoft.EventHub/namespaces/authorizationRules', variables('eventHubNamespaceName'), variables('defaultSASKeyName'))]",
+        "functionAppName1": "[concat('hlsapp1', uniqueString(resourceGroup().id))]",
+        "functionAppName2": "[concat('hlsapp2', uniqueString(resourceGroup().id))]",
+        "ehNSVersion" :"2018-01-01-preview",
+        "ehVersion" : "2017-04-01",
+        "documentDBVersion" : "2016-03-31",
+        "storageVersion" : "2018-11-01",
+        "webSiteVersion" : "2018-11-01",
+        "ehNSAuthVersion" : "2017-04-01"
+    },
+    "resources": [{
+            "type": "Microsoft.EventHub/namespaces",
+            "apiVersion": "[variables('ehNSVersion')]",
+            "name": "[variables('eventHubNamespaceName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "Standard"
+            },
+            "properties": {
+                "isAutoInflateEnabled": true,
+                "maximumThroughputUnits": 7
+            },
+            "resources": [{
+                "type": "eventhubs",
+                "apiVersion": "[variables('ehVersion')]",
+                "name": "[variables('eventHubName')]",
+                "dependsOn": [
+                    "[concat('Microsoft.EventHub/namespaces/', variables('eventHubNamespaceName'))]"
+                ],
+                "properties": {
+                    "messageRetentionInDays": 1,
+                    "partitionCount": 4
+                }
+            }]
+        },
+        {
+            "type": "Microsoft.DocumentDB/databaseAccounts",
+            "apiVersion": "[variables('documentDBVersion')]",
+            "name": "[variables('cosmosDBAccountName')]",
+            "location": "[parameters('location')]",
+            "tags": {
+                "defaultExperience": "DocumentDB"
+            },
+            "kind": "GlobalDocumentDB",
+            "properties": {
+                "name": "[variables('cosmosDBAccountName')]",
+                "databaseAccountOfferType": "[variables('offerType')]",
+                "locations": [{
+                    "id": "[concat(variables('cosmosDBAccountName'), '-', parameters('location'))]",
+                    "locationName": "[parameters('location')]",
+                    "failoverPriority": 0
+                }],
+                "enableMultipleWriteLocations": false,
+                "isVirtualNetworkFilterEnabled": false
+            }
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "[variables('webSiteVersion')]",
+            "name": "[variables('functionAppName1')]",
+            "location": "[parameters('location')]",
+            "dependsOn": [
+                "[resourceId('Microsoft.Storage/storageAccounts', parameters('storageName'))]"
+            ],
+            "kind": "functionapp",
+            "properties": {
+                "name": "[variables('functionAppName1')]",
+                "siteConfig": {
+                    "cors": {
+                        "allowedOrigins": [
+                            "*"
+                        ]
+                    },
+                    "appSettings": [{
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(variables('functionAppName1')))]"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "8.11.1"
+                        },
+                        {
+                            "name": "HERE_APP_CODE",
+                            "value": "[parameters('hereAPP_CODE')]"
+                        },
+                        {
+                            "name": "HERE_APP_ID",
+                            "value": "[parameters('hereAPP_ID')]"
+                        },
+                        {
+                            "name": "HERE_COSMOSDB_ENDPOINT",
+                            "value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('cosmosDBAccountName'))).documentEndpoint]"
+                        },
+                        {
+                            "name": "HERE_COSMOSDB_KEY",
+                            "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDBAccountName')), variables('documentDBVersion')).primaryMasterKey]"
+                        },
+                        {
+                            "name": "HERE_EVENTHUB_NS_CONNECTIONSTRING",
+                            "value": "[listkeys(variables('authRuleResourceId'), variables('ehNSAuthVersion')).primaryConnectionString]"
+                        }
+                    ]
+                },
+                "clientAffinityEnabled": false
+            },
+            "resources": [{
+                "type": "extensions",
+                "apiVersion": "[variables('webSiteVersion')]",
+                "name": "MSDeploy",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Web/Sites', variables('functionAppName1'))]"
+                ],
+                "properties": {
+                    "packageUri": "[parameters('functionZipPackageUrl')]"
+                },
+                "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
+            }],
+            "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
+        },
+        {
+            "type": "Microsoft.Web/sites",
+            "apiVersion": "[variables('webSiteVersion')]",
+            "name": "[variables('functionAppName2')]",
+            "location": "[parameters('location')]",
+            "kind": "functionapp",
+            "properties": {
+                "name": "[variables('functionAppName2')]",
+                "siteConfig": {
+                    "cors": {
+                        "allowedOrigins": [
+                            "*"
+                        ]
+                    },
+                    "appSettings": [{
+                            "name": "AzureWebJobsDashboard",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "AzureWebJobsStorage",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                            "value": "~2"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), variables('storageVersion')).keys[0].value)]"
+                        },
+                        {
+                            "name": "WEBSITE_CONTENTSHARE",
+                            "value": "[concat(toLower(variables('functionAppName2')))]"
+                        },
+                        {
+                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                            "value": "8.11.1"
+                        },
+                        {
+                            "name": "HERE_APP_CODE",
+                            "value": "[parameters('hereAPP_CODE')]"
+                        },
+                        {
+                            "name": "HERE_APP_ID",
+                            "value": "[parameters('hereAPP_ID')]"
+                        },
+                        {
+                            "name": "HERE_COSMOSDB_ENDPOINT",
+                            "value": "[reference(concat('Microsoft.DocumentDb/databaseAccounts/', variables('cosmosDBAccountName'))).documentEndpoint]"
+                        },
+                        {
+                            "name": "HERE_COSMOSDB_KEY",
+                            "value": "[listKeys(resourceId('Microsoft.DocumentDB/databaseAccounts', variables('cosmosDBAccountName')), variables('documentDBVersion')).primaryMasterKey]"
+                        },
+                        {
+                            "name": "HERE_EVENTHUB_NS_CONNECTIONSTRING",
+                            "value": "[listkeys(variables('authRuleResourceId'), variables('ehNSAuthVersion')).primaryConnectionString]"
+                        }
+                    ]
+                },
+                "clientAffinityEnabled": false
+            },
+            "resources": [{
+                "type": "extensions",
+                "apiVersion": "[variables('webSiteVersion')]",
+                "name": "MSDeploy",
+                "dependsOn": [
+                    "[resourceId('Microsoft.Web/Sites', variables('functionAppName2'))]"
+                ],
+                "properties": {
+                    "packageUri": "[parameters('functionZipPackageUrl')]"
+                },
+                "condition": "[equals(parameters('StorageAccountNewOrExisting'),'existing')]"
+            }],
+            "condition": "[equals(parameters('StorageAccountNewOrExisting'),'existing')]"
+        },
+        {
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "[variables('storageVersion')]",
+            "name": "[parameters('storageName')]",
+            "location": "[parameters('location')]",
+            "sku": {
+                "name": "[parameters('storageAccountType')]"
+            },
+            "properties": {
+                "name": "[parameters('storageAccountType')]"
+            },
+            "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
+        }
+    ],
+    "outputs": {
+        "eventHubNamespaceName": {
+            "type": "String",
+            "value": "[variables('eventHubNamespaceName')]"
+        },
+        "CosmosDBName": {
+            "type": "String",
+            "value": "[variables('cosmosDBAccountName')]"
+        },
+        "StorageName": {
+            "type": "String",
+            "value": "[parameters('storageName')]"
+        }
+    }
+}

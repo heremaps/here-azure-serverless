@@ -1,0 +1,45 @@
+{
+  "name": "@here/azure-eventhub-trigger-functions-datastream",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Azure Serverless EventHub Trigger Functions for HERE Location Suite APIs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": {
+    "name": "HERE Europe B.V.",
+    "url": "https://here.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/heremaps/here-azure-serverless.git",
+    "directory": "code/hlsTemplateDataStream"
+  },
+  "keywords": [
+    "HERE Technologies",
+    "EventHub",
+    "EventHub Trigger",
+    "here",
+    "Location",
+    "Geocoder",
+    "Routing",
+    "Places",
+    "Positioning",
+    "Map",
+    "Image",
+    "Tile",
+    "Fleet",
+    "Telematics"
+  ],
+  "engines": {
+    "node": "8.11.1"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^2.1.2",
+    "axios": "^0.18.0",
+    "body-parser": "^1.18.3",
+    "header-case-normalizer": "^1.0.3"
+  },
+  "license": "Apache-2.0"
+}

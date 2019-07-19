@@ -1,0 +1,84 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "hereAPP_ID": {
+            "type": "string"
+        },
+        "hereAPP_CODE": {
+            "type": "string"
+        },
+        "storageAccountType": {
+            "type": "string"
+        },
+        "storageName": {
+            "type": "string"
+        },
+        "storageAccountNewOrExisting": {
+            "type": "string"
+        },
+        "storageAccountExistingRG": {
+            "type": "string"
+        },
+        "location": {
+            "type": "string"
+        }
+    },
+    "variables": {
+        "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]",
+        "functionZipPackageUrl": "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateDataStream.zip')]"
+
+    },
+    "resources": [{
+        "apiVersion": "2018-02-01",
+        "name": "pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b",
+        "type": "Microsoft.Resources/deployments",
+        "properties": {
+            "mode": "Incremental",
+            "templateLink": {
+                "contentVersion": "1.0.0.0",
+                "uri": "[variables('nestedTemplateUri')]"
+            },
+            "parameters": {
+                "hereAPP_ID": {
+                    "value": "[parameters('hereAPP_ID')]"
+                },
+                "hereAPP_CODE": {
+                    "value": "[parameters('hereAPP_CODE')]"
+                },
+                "storageAccountType": {
+                    "value": "[parameters('storageAccountType')]"
+                },
+                "storageName": {
+                    "value": "[parameters('storageName')]"
+                },
+                "storageAccountNewOrExisting": {
+                    "value": "[parameters('storageAccountNewOrExisting')]"
+                },
+                "storageAccountExistingRG": {
+                    "value": "[parameters('storageAccountExistingRG')]"
+                },
+                "functionZipPackageUrl": {
+                    "value": "[variables('functionZipPackageUrl')]"
+                },
+                "location": {
+                    "value": "[parameters('location')]"
+                }
+            }
+        }
+    }],
+    "outputs": {
+    "eventHubNamespaceName": {
+          "type": "string",
+          "value": "[reference('pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b').outputs.eventHubNamespaceName.value]"
+      },
+        "CosmosDBName": {
+            "type": "string",
+            "value": "[reference('pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b').outputs.CosmosDBName.value]"
+        },
+        "StorageName": {
+            "type": "string",
+            "value": "[reference('pid-6d246f20-6ec9-5fe2-85c4-2d5ca9c95e5b').outputs.StorageName.value]"
+        }
+    }
+}

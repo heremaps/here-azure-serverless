@@ -1,0 +1,85 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
+  "handler": "Microsoft.Compute.MultiVm",
+  "version": "0.1.2-preview",
+  "parameters": {
+    "basics": [],
+    "steps": [{
+      "name": "hereConfig",
+      "label": "HERE Configuration",
+      "subLabel": {
+        "preValidation": "Configure HERE credentials, storage",
+        "postValidation": "Done"
+      },
+      "bladeTitle": "HERE Configuration",
+      "elements": [{
+          "name": "text1",
+          "type": "Microsoft.Common.InfoBox",
+          "visible": true,
+          "options": {
+            "icon": "Info",
+            "text": "Get your HERE App ID and App Code by Signing-up for FREE at https://developer.here.com",
+            "uri": "https://developer.here.com/ref/azure_marketplace_hlsfuntions?create=Freemium-Basic"
+          }
+        },
+
+        {
+          "name": "hereAPP_ID",
+          "type": "Microsoft.Common.TextBox",
+          "label": "HERE App ID",
+          "toolTip": "HERE App ID (https://developer.here.com/faqs#access-control)",
+          "visible": true,
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "hereAPP_CODE",
+          "type": "Microsoft.Common.TextBox",
+          "label": "HERE App Code",
+          "toolTip": "HERE App Code (https://developer.here.com/faqs#access-control)",
+          "visible": true,
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "storageConfig",
+          "type": "Microsoft.Storage.StorageAccountSelector",
+          "label": "Storage account",
+          "toolTip": "",
+          "defaultValue": {
+            "name": "[concat('storage', skip( replace( guid(),  '-', ''), 17)) ]",
+            "type": "Standard_LRS"
+          },
+          "constraints": {
+            "allowedTypes": [
+              "Standard_LRS",
+              "Standard_GRS",
+              "Standard_RAGRS",
+              "Standard_ZRS",
+              "Premium_LRS",
+              "Premium_ZRS"
+            ]
+          },
+          "options": {
+            "hideExisting": false
+          },
+          "visible": true
+        }
+
+      ]
+    }],
+    "outputs": {
+      "location": "[location()]",
+
+      "hereAPP_ID": "[steps('hereConfig').hereAPP_ID]",
+      "hereAPP_CODE": "[steps('hereConfig').hereAPP_CODE]",
+
+      "storageName": "[steps('hereConfig').storageConfig.name]",
+      "storageAccountType": "[steps('hereConfig').storageConfig.type]",
+      "storageAccountNewOrExisting": "[steps('hereConfig').storageConfig.newOrExisting]",
+      "storageAccountExistingRG": "[steps('hereConfig').storageConfig.resourceGroup]"
+    }
+  }
+}

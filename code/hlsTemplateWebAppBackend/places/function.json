@@ -1,0 +1,11 @@
+{
+  "bindings": [
+    {
+      "name": "serviceBusMsg",
+      "type": "serviceBusTrigger",
+      "direction": "in",
+      "queueName": "places_queue_in",
+      "connection": "HERE_SERVICEBUS_CONNECTIONSTRING"
+    }
+  ]
+}
