@@ -2,11 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "authType" :{
+            "type" : "string"
+        },
         "hereAPP_ID": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "hereAPP_CODE": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
+        },
+        "hereAPI_KEY": {
+            "type": "string",
+            "defaultValue": ""
         },
         "storageAccountType": {
             "type": "string"
@@ -28,9 +37,9 @@
     "variables": {
         "nestedTemplateUri": "[uri(deployment().properties.templateLink.uri, 'nestedtemplates/azuredeploy.json')]",
         "functionZipPackageUrl": "[uri(deployment().properties.templateLink.uri, 'deployables/hlsTemplateServerlessFunction.zip')]"
-
     },
-    "resources": [{
+    "resources": [
+        {
         "apiVersion": "2018-02-01",
         "name": "pid-4f3af7ce-3171-5867-a16f-0abb5914d599",
         "type": "Microsoft.Resources/deployments",
@@ -41,11 +50,17 @@
                 "uri": "[variables('nestedTemplateUri')]"
             },
             "parameters": {
+                "authType" :{
+                    "value": "[parameters('authType')]"
+                },
                 "hereAPP_ID": {
                     "value": "[parameters('hereAPP_ID')]"
                 },
                 "hereAPP_CODE": {
                     "value": "[parameters('hereAPP_CODE')]"
+                },
+                "hereAPI_KEY": {
+                    "value": "[parameters('hereAPI_KEY')]"
                 },
                 "storageAccountType": {
                     "value": "[parameters('storageAccountType')]"

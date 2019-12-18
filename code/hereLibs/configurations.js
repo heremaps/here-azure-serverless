@@ -24,33 +24,66 @@ let urls = {
     // Make sure that configured URLs always end with trailing '/' char.
 
     // Position API URL
-    "HERE_POS_URL": 'https:// pos.api.here.com/positioning/',
+    "HERE_POS_URL": 'https://pos.api.here.com/positioning/',
 
     // Geocoder API URL
-    "HERE_GEOCODER_URL": 'https:// geocoder.api.here.com/',
-    "HERE_BATCH_GEOCODER_URL": 'https:// batch.geocoder.api.here.com/',
-    "HERE_AUTOCOMPLETE_GEOCODER_URL": 'http:// autocomplete.geocoder.api.here.com/',
-    "HERE_REVERSE_GEOCODER_URL": 'https:// reverse.geocoder.api.here.com/',
+    "HERE_GEOCODER_URL": 'https://geocoder.api.here.com/',
+    "HERE_BATCH_GEOCODER_URL": 'https://batch.geocoder.api.here.com/',
+    "HERE_AUTOCOMPLETE_GEOCODER_URL": 'http://autocomplete.geocoder.api.here.com/',
+    "HERE_REVERSE_GEOCODER_URL": 'https://reverse.geocoder.api.here.com/',
 
     // Map Image API URL
-    "HERE_MAP_IMAGE_URL": 'https:// image.maps.api.here.com/',
+    "HERE_MAP_IMAGE_URL": 'https://image.maps.api.here.com/',
 
     // Places API URL
-    "HERE_PLACES_URL": 'https:// places.api.here.com/places/',
+    "HERE_PLACES_URL": 'https://places.api.here.com/places/',
 
     // Routing API URL
-    "HERE_ROUTING_URL": 'https:// route.api.here.com/routing/',
-    "HERE_ROUTING_ISOLINE_URL": 'https:// isoline.route.api.here.com/routing/',
-    "HERE_ROUTING_MATRIX_URL": 'https:// matrix.route.api.here.com/routing/',
+    "HERE_ROUTING_URL": 'https://route.api.here.com/routing/',
+    "HERE_ROUTING_ISOLINE_URL": 'https://isoline.route.api.here.com/routing/',
+    "HERE_ROUTING_MATRIX_URL": 'https://matrix.route.api.here.com/routing/',
 
     // MAap Tile API URL
-    "HERE_MAPTILE_AERIAL_URL": 'https:// 1TO4.aerial.maps.api.here.com/',
-    "HERE_MAPTILE_BASE_URL": 'https:// 1TO4.base.maps.api.here.com/',
-    "HERE_MAPTILE_PANO_URL": 'https:// 1TO4.pano.maps.api.here.com/',
-    "HERE_MAPTILE_TRAFFIC_URL": 'https:// 1TO4.traffic.maps.api.here.com/',
+    "HERE_MAPTILE_AERIAL_URL": 'https://1TO4.aerial.maps.api.here.com/',
+    "HERE_MAPTILE_BASE_URL": 'https://1TO4.base.maps.api.here.com/',
+    "HERE_MAPTILE_PANO_URL": 'https://1TO4.pano.maps.api.here.com/',
+    "HERE_MAPTILE_TRAFFIC_URL": 'https://1TO4.traffic.maps.api.here.com/',
 
     // Fleet Telematics API URL
-    "HERE_FLEET_TELEMATICS_URL": "https:// fleet.api.here.com/"
+    "HERE_FLEET_TELEMATICS_URL": "https://fleet.api.here.com/"
+};
+
+// New Urls are to be used for APIKey or Authentication using token.
+let authUrls = {
+    // Make sure that configured URLs always end with trailing '/' char.
+    // Position API URL
+    "HERE_POS_URL": 'https://pos.ls.hereapi.com/positioning/',
+
+    // Geocoder API URL
+    "HERE_GEOCODER_URL": 'https://geocoder.ls.hereapi.com/',
+    "HERE_BATCH_GEOCODER_URL": 'https://batch.geocoder.ls.hereapi.com/',
+    "HERE_AUTOCOMPLETE_GEOCODER_URL": 'http://autocomplete.geocoder.ls.hereapi.com/',
+    "HERE_REVERSE_GEOCODER_URL": 'https://reverse.geocoder.ls.hereapi.com/',
+
+    // Map Image API URL
+    "HERE_MAP_IMAGE_URL": 'https://image.maps.ls.hereapi.com/',
+
+    // Places API URL
+    "HERE_PLACES_URL": 'https://places.ls.hereapi.com/places/',
+
+    // Routing API URL
+    "HERE_ROUTING_URL": 'https://route.ls.hereapi.com/routing/',
+    "HERE_ROUTING_ISOLINE_URL": 'https://isoline.route.ls.hereapi.com/routing/',
+    "HERE_ROUTING_MATRIX_URL": 'https://matrix.route.ls.hereapi.com/routing/',
+
+    // MAap Tile API URL
+    "HERE_MAPTILE_AERIAL_URL": 'https://1TO4.aerial.maps.ls.hereapi.com/',
+    "HERE_MAPTILE_BASE_URL": 'https://1TO4.base.maps.ls.hereapi.com/',
+    "HERE_MAPTILE_PANO_URL": 'https://1TO4.pano.maps.ls.hereapi.com/',
+    "HERE_MAPTILE_TRAFFIC_URL": 'https://1TO4.traffic.maps.ls.hereapi.com/',
+
+    // Fleet Telematics API URL
+    "HERE_FLEET_TELEMATICS_URL": "https://fleet.ls.hereapi.com/"
 };
 
 let cosmosDB = {
@@ -68,7 +101,7 @@ let cosmosDB = {
     }
     // serverlessExpressHandler ( possible express serverless module to be used.)
     // Available options are 
-    // 1. azure  -> azure-funciton-express
+    // 1. azure  -> azure-funciton-express #intermittent bugs present
     // 2. azure-aws ->azure-aws-serverless-express
 
 let serverlessExpressHandler = "azure-aws";
@@ -88,6 +121,7 @@ let loggerEnabled = true;
 
 module.exports = {
     urls: urls,
+    authUrls: authUrls,
     serverlessExpressHandler: serverlessExpressHandler,
     httpClient: httpClient,
     loggerEnabled: loggerEnabled,

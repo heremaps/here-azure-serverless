@@ -33,15 +33,14 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 
 // HERE credentials App_Code and App_Id
-const HERE_APP_CODE = process.env.HERE_APP_CODE;
-const HERE_APP_ID = process.env.HERE_APP_ID;
+const HERE_API_KEY = process.env.HERE_API_KEY;
 
 // Binds the express app to an Azure Function handler
 app.use(compression());
 module.exports = serverlessHandler(app);
 
 //API URL
-const HERE_API_URL = config.urls.HERE_POS_URL;
+const HERE_API_URL = config.authUrls.HERE_POS_URL;
 
 app.all("/api/positioning/*", asyncMiddleware(async(req, res) => {
 
@@ -49,8 +48,8 @@ app.all("/api/positioning/*", asyncMiddleware(async(req, res) => {
     var logger = loggers.getLogger(req);
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials. 
-    let proxyUrl = reqProcessor.processRequest(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
-
+    let proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
+    
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);
 

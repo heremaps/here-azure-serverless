@@ -1,6 +1,7 @@
 # Azure Serverless ServiceBus Queue Trigger Function App.
 
 Create collection of service bus triggered functions
+This offering is available as Azure Marketplace offer for deployment.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheremaps%2Fhere-azure-serverless%2Fmaster%2FarmTemplates%2F101-hlsARMTemplateWebAppBackend%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>

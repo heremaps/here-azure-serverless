@@ -14,19 +14,19 @@ The build script creates a `dist` folder, where the required `npm packages` and 
 
 ## ARM Templates
 * Serverless Functions
-    Deploys 7 HERE Location Services APIs as Azure functions.
+    Creates 7 HERE Location Services APIs as Azure functions.
     ```
     Template :  ./armTemplates/100-hlsARMTemplateServerlessFunctions/azuredeploy.json
     Build zip file : ./dist/deployables/azureMarketplace/hlsTemplateServerlessFunction.zip
     ```
 * DataStreams
-    Deploys event-hub, 7 HERE Location Services APIs as functions and Cosmos DB.
+    Creates event-hub, 7 HERE Location Services APIs as functions and Cosmos DB.
     ```
     Template : ./armTemplates/102-hlsARMTemplateDataStream/azuredeploy.json
     Build zip file : ./dist/deployables/azureMarketplace/hlsTemplateDataStream.zip
     ```
 * WebApp Backend
-    Deploys service-bus, HERE Location Services APIs as functions and Cosmos DB.
+    Creates service-bus, HERE Location Services APIs as functions and Cosmos DB.
     ```
     Template : ./armTemplates/101-hlsARMTemplateWebAppBackend/azuredeploy.json
     Build zip file : ./dist/deployables/azureMarketplace/hlsTemplateWebAppBackend.zip

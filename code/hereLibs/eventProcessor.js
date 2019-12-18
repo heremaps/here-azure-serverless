@@ -24,8 +24,12 @@ const cosmosdblogger = require("../hereLibs/cosmosDbLogger");
 function processEvent(log, req) {
     // var eventType=""
     // Log Environment Variable & Values.
+    log(`[HERE_AUTH_TYPE]          : [${req._config.HERE_AUTH_TYPE}]`);
+    log(`[HERE_APP_KEY]          : [${req._config.HERE_APP_KEY}]`);
+
     log(`[HERE_APP_ID]            : [${req._config.HERE_APP_ID}]`);
     log(`[HERE_APP_CODE]          : [${req._config.HERE_APP_CODE}]`);
+
     log(`[HERE_API_URL]           : [${req._config.HERE_API_URL}]`);
     log(`[HERE_COSMOSDB_ENDPOINT] : [${req._config.HERE_COSMOSDB_ENDPOINT}]`);
     log(`[HERE_COSMOSDB_KEY]      : [${req._config.HERE_COSMOSDB_KEY}]`);
@@ -48,10 +52,19 @@ function processEvent(log, req) {
     // API URL ends with '/' char , hence ensure that req.url which appends to it doesnt have a leading '/' char
     req.url = req.url.charAt(0) === '/' ? req.url.substring(1) : req.url;
 
-    if (req.url.indexOf("?") > 0) {
-        proxy_url = `${req._config.HERE_API_URL}${req.url}&app_id=${req._config.HERE_APP_ID}&app_code=${req._config.HERE_APP_CODE}`
-    } else {
-        proxy_url = `${req._config.HERE_API_URL}${req.url}?app_id=${req._config.HERE_APP_ID}&app_code=${req._config.HERE_APP_CODE}`
+    if (req._config.HERE_AUTH_TYPE == "apikey") {
+        if (req.url.indexOf("?") > 0) {
+            proxy_url = `${req._config.HERE_API_URL}${req.url}&apikey=${req._config.HERE_API_KEY}`
+        } else {
+            proxy_url = `${req._config.HERE_API_URL}${req.url}?apikey=${req._config.HERE_API_KEY}`
+        }
+    }
+    else {
+       if (req.url.indexOf("?") > 0) {
+            proxy_url = `${req._config.HERE_API_URL}${req.url}&app_id=${req._config.HERE_APP_ID}&app_code=${req._config.HERE_APP_CODE}`
+        } else {
+            proxy_url = `${req._config.HERE_API_URL}${req.url}?app_id=${req._config.HERE_APP_ID}&app_code=${req._config.HERE_APP_CODE}`
+        }
     }
 
     let contentType = req.contenttype == undefined ? "*" : req.contenttype;
@@ -120,14 +133,32 @@ function sanitizieUrl(url) {
         return url.replace("maps.api.here.com/pano/", "maps.api.here.com/")
     } else if (url.indexOf("maps.api.here.com/traffic/") > 0) {
         return url.replace("maps.api.here.com/traffic/", "maps.api.here.com/")
-    } else if (url.indexOf("maps.api.here.com// aerial/") > 0) {
-        return url.replace("maps.api.here.com// aerial/", "maps.api.here.com/")
-    } else if (url.indexOf("maps.api.here.com// base/") > 0) {
-        return url.replace("maps.api.here.com// base/", "maps.api.here.com/")
-    } else if (url.indexOf("maps.api.here.com// pano/") > 0) {
-        return url.replace("maps.api.here.com// pano/", "maps.api.here.com/")
-    } else if (url.indexOf("maps.api.here.com// traffic/") > 0) {
-        return url.replace("maps.api.here.com// traffic/", "maps.api.here.com/")
+    } else if (url.indexOf("maps.api.here.com//aerial/") > 0) {
+        return url.replace("maps.api.here.com//aerial/", "maps.api.here.com/")
+    } else if (url.indexOf("maps.api.here.com//base/") > 0) {
+        return url.replace("maps.api.here.com//base/", "maps.api.here.com/")
+    } else if (url.indexOf("maps.api.here.com//pano/") > 0) {
+        return url.replace("maps.api.here.com//pano/", "maps.api.here.com/")
+    } else if (url.indexOf("maps.api.here.com//traffic/") > 0) {
+        return url.replace("maps.api.here.com//traffic/", "maps.api.here.com/")
+    }
+    // URL supported for ApiKey 
+    else if (url.indexOf("maps.ls.hereapi.com/aerial/") > 0) {
+        return url.replace("maps.ls.hereapi.com/aerial/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com/base/") > 0) {
+        return url.replace("maps.ls.hereapi.com/base/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com/pano/") > 0) {
+        return url.replace("maps.ls.hereapi.com/pano/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com/traffic/") > 0) {
+        return url.replace("maps.ls.hereapi.com/traffic/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com//aerial/") > 0) {
+        return url.replace("maps.ls.hereapi.com//aerial/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com//base/") > 0) {
+        return url.replace("maps.ls.hereapi.com//base/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com//pano/") > 0) {
+        return url.replace("maps.ls.hereapi.com//pano/", "maps.ls.hereapi.com/")
+    } else if (url.indexOf("maps.ls.hereapi.com//traffic/") > 0) {
+        return url.replace("maps.ls.hereapi.com//traffic/", "maps.ls.hereapi.com/")
     }
     // Default "Unchanged URL returned"
     return url;

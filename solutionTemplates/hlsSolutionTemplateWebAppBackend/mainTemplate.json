@@ -2,11 +2,20 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "authType" :{
+            "type" : "string"
+        },
         "hereAPP_ID": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
         },
         "hereAPP_CODE": {
-            "type": "string"
+            "type": "string",
+            "defaultValue": ""
+        },
+        "hereAPI_KEY": {
+            "type": "string",
+            "defaultValue": ""
         },
         "storageAccountType": {
             "type": "string"
@@ -41,11 +50,17 @@
                 "uri": "[variables('nestedTemplateUri')]"
             },
             "parameters": {
+                "authType" :{
+                    "value": "[parameters('authType')]"
+                },
                 "hereAPP_ID": {
                     "value": "[parameters('hereAPP_ID')]"
                 },
                 "hereAPP_CODE": {
                     "value": "[parameters('hereAPP_CODE')]"
+                },
+                "hereAPI_KEY": {
+                    "value": "[parameters('hereAPI_KEY')]"
                 },
                 "storageAccountType": {
                     "value": "[parameters('storageAccountType')]"

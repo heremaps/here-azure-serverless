@@ -7,7 +7,6 @@ Deploys HERE Map Image API as HTTP trigger serverless function.
 </a>
 
 This template does the following:
-  1. Creates standard storage account/use existing storage.
-  2. Creates a function app.
-  3. Creates "Map Image" HTTP trigger function.
+  1. Creates a function app.
+  2. Creates "Map Image" HTTP trigger function.
 

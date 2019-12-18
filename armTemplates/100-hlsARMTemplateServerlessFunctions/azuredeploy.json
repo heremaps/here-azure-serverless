@@ -2,6 +2,12 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
+        "authType" :{
+            "type" : "string"
+        },
+        "hereAPI_KEY": {
+            "type": "String"
+        },
         "hereAPP_ID": {
             "type": "String"
         },
@@ -95,15 +101,23 @@
                         },
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "8.11.1"
+                            "value": "10.14.1"
+                        },
+                        {
+                            "name": "HERE_AUTH_TYPE",
+                            "value": "[parameters('authType')]"
+                        },
+                        {
+                            "name": "HERE_APP_ID",
+                            "value": "[parameters('hereAPP_ID')]"
                         },
                         {
                             "name": "HERE_APP_CODE",
                             "value": "[parameters('hereAPP_CODE')]"
                         },
                         {
-                            "name": "HERE_APP_ID",
-                            "value": "[parameters('hereAPP_ID')]"
+                            "name": "HERE_API_KEY",
+                            "value": "[parameters('hereAPI_KEY')]"
                         }
                     ]
                 },
@@ -159,15 +173,23 @@
                         },
                         {
                             "name": "WEBSITE_NODE_DEFAULT_VERSION",
-                            "value": "8.11.1"
+                            "value": "10.14.1"
+                        },
+                        {
+                            "name": "HERE_AUTH_TYPE",
+                            "value": "[parameters('authType')]"
+                        },
+                        {
+                            "name": "HERE_APP_ID",
+                            "value": "[parameters('hereAPP_ID')]"
                         },
                         {
                             "name": "HERE_APP_CODE",
                             "value": "[parameters('hereAPP_CODE')]"
                         },
                         {
-                            "name": "HERE_APP_ID",
-                            "value": "[parameters('hereAPP_ID')]"
+                            "name": "HERE_API_KEY",
+                            "value": "[parameters('hereAPI_KEY')]"
                         }
                     ]
                 },

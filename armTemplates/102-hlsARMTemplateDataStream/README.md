@@ -1,6 +1,7 @@
 # Azure Serverless EventHub Trigger Function App
 
 Creates a single eventHub triggered function catering to 7 HERE Location Suite APIs.
+This offering is available as Azure Marketplace offer for deployment.
 
 <a href="https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fheremaps%2Fhere-azure-serverless%2Fmaster%2FarmTemplates%2F102-hlsARMTemplateDataStream%2Fazuredeploy.json" target="_blank">
     <img src="http://azuredeploy.net/deploybutton.png"/>

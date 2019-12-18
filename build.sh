@@ -1,4 +1,4 @@
-# !/bin/sh
+#!/bin/sh
 
 # Build script for azure HLS work.
 azureHLSWorkspaceDir="`pwd`"
@@ -16,11 +16,10 @@ fi
 # Check if nodeJS version is >= 8.11
 if ! [ -x "$(which node)" ]
 then
-    echo "Azure HLS APIs are compiled with node LTS version 8.11.1"
+    echo "Azure HLS APIs are compiled with node LTS version 10.14.1"
     exit 1
 fi
 # Check if azure-function-core-tools are installed.
-# TODO:
 if ! [ -x "$(which func)" ]
 then
     echo "Azure function core tools not installed."
@@ -43,9 +42,35 @@ then
     mv dist dist_previous
 fi
 
+if [ -d "functionZips_previous" ] 
+then
+    echo "functionZips_previous directory found, removing it"
+    rm -fr  functionZips_previous
+fi
+cd $azureHLSWorkspaceDir
+if [ -d "functionZips" ] 
+then
+    echo "functionZips directory found, moving to functionZips_previous."
+    mv functionZips functionZips_previous
+fi
+
+if [ -d "marketPlaceZips_previous   " ] 
+then
+    echo "marketPlaceZips_previous directory found, removing it"
+    rm -fr  marketPlaceZips_previous
+fi
+cd $azureHLSWorkspaceDir
+if [ -d "marketPlaceZips" ] 
+then
+    echo "marketPlaceZips directory found, moving to marketPlaceZips_previous."
+    mv marketPlaceZips marketPlaceZips_previous
+fi
+
 # Create a new directory structure for Build 
-echo "Creating new dist directory."
+echo "Creating new dist & Zip directory."
 mkdir dist
+mkdir functionZips
+mkdir marketPlaceZips
 
 # Create directories for Marketplace templates.
 # Below directories will contain compiled code Zip file
@@ -109,7 +134,7 @@ echo "------------------------------------------------------"
     # c. install eventhub azure extension.
     echo "\tc. Installing Azure EventHubs extension"
     # echo "\t------------------------------"
-    func extensions install -p Microsoft.Azure.WebJobs.Extensions.EventHubs -v 3.0.0 > /dev/null
+    func extensions install -p Microsoft.Azure.WebJobs.Extensions.EventHubs -v 4.0.0 --javascript > /dev/null
     if [ $? -ne 0 ] 
     then
         echo "ERROR : Microsoft.Azure.WebJobs.Extensions.EventHubs extension not installed."
@@ -141,7 +166,7 @@ echo "------------------------------------------------------"
     # c. install ServiceBus azure extension.
     echo "\tc. Installing Azure ServiceBus extension"
     # echo "\t------------------------------"
-    func extensions install -p Microsoft.Azure.WebJobs.Extensions.ServiceBus -v 3.0.0  > /dev/null
+    func extensions install -p Microsoft.Azure.WebJobs.Extensions.ServiceBus -v 4.0.0 --javascript  > /dev/null
 
     if [ $? -ne 0 ] 
     then
@@ -185,7 +210,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIFleetTelematics/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIFleetTelematics
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/fleetTelematics $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIFleetTelematics
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIFleetTelematics
 
     # b. Installing dependencies.
@@ -207,7 +231,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIGeocoder/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIGeocoder
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/geocoder $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIGeocoder
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIGeocoder
 
 
@@ -230,7 +253,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIMapImage/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapImage
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/mapImage $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapImage
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapImage
 
     # b. Installing dependencies.
@@ -252,7 +274,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIMapTile/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/mapTile $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile
 
     # b. Installing dependencies.
@@ -274,7 +295,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIPlaces/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/places $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
 
     # b. Installing dependencies.
@@ -296,7 +316,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIPositioning/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/positioning $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning
 
      # b. Installing dependencies.
@@ -318,7 +337,6 @@ echo "------------------------------------------------------"
     echo "\ta. Copying code content."
     # echo "\t------------------------------"
     cp -R $azureHLSWorkspaceDir/code/hlsAPIRouting/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting
-    cp -R $azureHLSWorkspaceDir/code/hlsTemplateServerlessFunction/routing $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting
     cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting
 
      # b. Installing dependencies.
@@ -426,9 +444,19 @@ echo "------------------------------------------------------"
 cd $azureHLSWorkspaceDir/dist/deployables
 find . -name "*.zip"
 
+
 # On MacOS, .DS_Store within zip reports error on marketplace publishing.
 echo "------------------------------------------------------"
 echo "Checking Zips containing .DS_Store file, no output expected "
 echo "------------------------------------------------------"
 find . -name "*.zip" -exec grep -l ".DS_Store" {} \;
 echo "------------------------------------------------------"
+echo "Updating functionZips Directory with latest zip files."
+cp $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/*.zip $azureHLSWorkspaceDir/functionZips
+
+echo "------------------------------------------------------"
+echo "Updating marketPlaceZips Directory with latest zip files."
+echo "------------------------------------------------------"
+cp $azureHLSWorkspaceDir/dist/deployables/azureMarketplacePublishing/*.zip $azureHLSWorkspaceDir/marketPlaceZips
+echo "------------------------------------------------------"
+# EOF

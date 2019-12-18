@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-// Serverless Function for HERE Routing API
+// Azure Serverless Function for HEERE Routing API
 
 'use strict';
 
@@ -30,17 +30,33 @@ const app = require("express")();
 const compression = require("compression");
 
 // HERE credentials App_Code and App_Id
+const HERE_AUTH_TYPE = process.env.HERE_AUTH_TYPE;
 const HERE_APP_CODE = process.env.HERE_APP_CODE;
 const HERE_APP_ID = process.env.HERE_APP_ID;
+const HERE_API_KEY = process.env.HERE_API_KEY;
 
-// Binds the express app to an Azure Function handler
+//  Binds the express app to an Azure Function handler
 app.use(compression());
 module.exports = serverlessHandler(app);
 
+
 // API URL
-const ROUTE_URL = config.urls.HERE_ROUTING_URL;
-const ISOLINE_URL = config.urls.HERE_ROUTING_ISOLINE_URL;
-const MATRIX_URL = config.urls.HERE_ROUTING_MATRIX_URL;
+let ROUTE_URL = "";
+let ISOLINE_URL = "";
+let MATRIX_URL = "";
+
+if (  HERE_AUTH_TYPE == "apikey") {
+    ROUTE_URL = config.authUrls.HERE_ROUTING_URL;
+    ISOLINE_URL = config.authUrls.HERE_ROUTING_ISOLINE_URL;
+    MATRIX_URL = config.authUrls.HERE_ROUTING_MATRIX_URL;
+}
+else { 
+    ROUTE_URL = config.urls.HERE_ROUTING_URL;
+    ISOLINE_URL = config.urls.HERE_ROUTING_ISOLINE_URL;
+    MATRIX_URL = config.urls.HERE_ROUTING_MATRIX_URL;
+}
+let proxyUrl = "";
+
 
 app.all("/api/routing/*", asyncMiddleware(async(req, res) => {
 
@@ -51,7 +67,12 @@ app.all("/api/routing/*", asyncMiddleware(async(req, res) => {
     var logger = loggers.getLogger(req);
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials. 
-    let proxyUrl = reqProcessor.processRequest(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
+    if (  HERE_AUTH_TYPE == "apikey") {
+        proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
+    }
+    else  { 
+        proxyUrl = reqProcessor.processRequestAuthID(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
+    }
 
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);
@@ -70,5 +91,6 @@ function buildHereApiUrl(req) {
     } else {
         return ROUTE_URL;
     }
+
 }
 

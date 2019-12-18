@@ -3,13 +3,7 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     
-    "hereAPP_ID": {
-      "type": "String",
-      "metadata": {
-        "description": "For HERE Credentials, refer https://developer.here.com"
-      }
-    },
-    "hereAPP_CODE": {
+    "hereAPI_KEY": {
       "type": "String",
       "metadata": {
         "description": "For HERE Credentials, refer https://developer.here.com"
@@ -75,15 +69,11 @@
             },
             {
               "name": "WEBSITE_NODE_DEFAULT_VERSION",
-              "value": "8.11.1"
+              "value": "10.14.1"
             },
             {
-              "name": "HERE_APP_CODE",
-              "value": "[parameters('hereAPP_CODE')]"
-            },
-            {
-              "name": "HERE_APP_ID",
-              "value": "[parameters('hereAPP_ID')]"
+              "name": "HERE_API_KEY",
+              "value": "[parameters('hereAPI_KEY')]"
             }
           ]
         },

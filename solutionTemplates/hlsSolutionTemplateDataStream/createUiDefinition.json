@@ -1,6 +1,6 @@
 {
   "$schema": "https://schema.management.azure.com/schemas/0.1.2-preview/CreateUIDefinition.MultiVm.json#",
-  "handler": "Microsoft.Compute.MultiVm",
+  "handler": "Microsoft.Azure.CreateUIDef",
   "version": "0.1.2-preview",
   "parameters": {
     "basics": [],
@@ -13,22 +13,39 @@
       },
       "bladeTitle": "HERE Configuration",
       "elements": [{
-          "name": "text1",
+          "name": "authType",
+          "type": "Microsoft.Common.OptionsGroup",
+          "label": "Authentication Type",
+          "defaultValue": "API Key",
+          "toolTip": "Choose type of authentication.",
+          "constraints": {
+            "allowedValues": [{
+                "label": "API Key",
+                "value": "apikey"
+              },
+              {
+                "label": "App ID/App Code",
+                "value": "appid_appcode"
+              }
+            ]
+          }
+        },
+        {
+          "name": "text2",
           "type": "Microsoft.Common.InfoBox",
-          "visible": true,
+          "visible": "[equals(steps('hereConfig').authType, 'appid_appcode')]",
           "options": {
             "icon": "Info",
             "text": "Get your HERE App ID and App Code by Signing-up for FREE at https://developer.here.com",
             "uri": "https://developer.here.com/ref/azure_marketplace_hlsfuntions?create=Freemium-Basic"
           }
         },
-
         {
           "name": "hereAPP_ID",
           "type": "Microsoft.Common.TextBox",
           "label": "HERE App ID",
           "toolTip": "HERE App ID (https://developer.here.com/faqs#access-control)",
-          "visible": true,
+          "visible": "[equals(steps('hereConfig').authType, 'appid_appcode')]",
           "constraints": {
             "required": true
           }
@@ -38,7 +55,27 @@
           "type": "Microsoft.Common.TextBox",
           "label": "HERE App Code",
           "toolTip": "HERE App Code (https://developer.here.com/faqs#access-control)",
-          "visible": true,
+          "visible": "[equals(steps('hereConfig').authType, 'appid_appcode')]",
+          "constraints": {
+            "required": true
+          }
+        },
+        {
+          "name": "text1",
+          "type": "Microsoft.Common.InfoBox",
+          "visible": "[equals(steps('hereConfig').authType, 'apikey')]",
+          "options": {
+            "icon": "Info",
+            "text": "Get your HERE API Key by Signing-up for FREE at https://developer.here.com",
+            "uri": "https://developer.here.com/ref/azure_marketplace_hlsfuntions?create=Freemium-Basic"
+          }
+        },
+        {
+          "name": "hereAPI_KEY",
+          "type": "Microsoft.Common.TextBox",
+          "label": "HERE API Key",
+          "toolTip": "HERE API Key (https://developer.here.com/faqs#access-control)",
+          "visible": "[equals(steps('hereConfig').authType, 'apikey')]",
           "constraints": {
             "required": true
           }
@@ -67,15 +104,14 @@
           },
           "visible": true
         }
-
       ]
     }],
     "outputs": {
       "location": "[location()]",
-
+      "authType": "[steps('hereConfig').authType]",
       "hereAPP_ID": "[steps('hereConfig').hereAPP_ID]",
       "hereAPP_CODE": "[steps('hereConfig').hereAPP_CODE]",
-
+      "hereAPI_KEY": "[steps('hereConfig').hereAPI_KEY]",
       "storageName": "[steps('hereConfig').storageConfig.name]",
       "storageAccountType": "[steps('hereConfig').storageConfig.type]",
       "storageAccountNewOrExisting": "[steps('hereConfig').storageConfig.newOrExisting]",
