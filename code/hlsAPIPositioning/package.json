@@ -27,11 +27,11 @@
     "node": "10.14.1"
   },
   "dependencies": {
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "azure-aws-serverless-express": "^0.1.5",
     "azure-function-express": "^2.0.0",
-    "compression": "^1.7.3",
-    "express": "^4.16.4",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
     "header-case-normalizer": "^1.0.3"
   },
   "license": "Apache-2.0"
