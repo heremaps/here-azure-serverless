@@ -29,43 +29,31 @@ const loggers = require("../hereLibs/logger");
 const app = require("express")();
 const compression = require("compression");
 
-// HERE credentials App_Code and App_Id
-const HERE_AUTH_TYPE = process.env.HERE_AUTH_TYPE;
-const HERE_APP_CODE = process.env.HERE_APP_CODE;
-const HERE_APP_ID = process.env.HERE_APP_ID;
+// HERE credentials API Key
 const HERE_API_KEY = process.env.HERE_API_KEY;
 
-let HERE_GEOCODER_URL = "";
-let HERE_REVERSE_GEOCODER_URL = "";
+let HERE_DISCOVER_URL = config.authUrls.HERE_DISCOVER_URL;
+let HERE_AUTOSUGGEST_URL = config.authUrls.HERE_AUTOSUGGEST_URL;
+let HERE_BROWSE_URL = config.authUrls.HERE_BROWSE_URL;
+let HERE_LOOKUP_URL = config.authUrls.HERE_LOOKUP_URL;
+let HERE_REVGEOCODE_URL = config.authUrls.HERE_REVGEOCODE_URL;
+let HERE_GEOCODE_URL = config.authUrls.HERE_GEOCODE_URL;
 
-if (  HERE_AUTH_TYPE == "apikey") {
-    HERE_GEOCODER_URL = config.authUrls.HERE_GEOCODER_URL;
-    HERE_REVERSE_GEOCODER_URL = config.authUrls.HERE_REVERSE_GEOCODER_URL;
-}
-else { 
-    HERE_GEOCODER_URL = config.urls.HERE_GEOCODER_URL;
-    HERE_REVERSE_GEOCODER_URL = config.urls.HERE_REVERSE_GEOCODER_URL;
-}
 let proxyUrl = "";
 // Binds the express app to an Azure Function handler
 app.use(compression());
 module.exports = serverlessHandler(app);
 
-app.all("/api/geocoder/*", asyncMiddleware(async(req, res) => {
+app.all("/api/geocoder/*", asyncMiddleware(async (req, res) => {
 
-    // Find if the call is for geocoder/reverse-geocoder.
+    // Classify  and build Geocoding & search API URL.
     let HERE_API_URL = buildHereApiUrl(req);
 
     // get logger instance, ( it varies based on selection of express handler.)
     let logger = loggers.getLogger(req);
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials.
-    if (  HERE_AUTH_TYPE == "apikey") {
-        proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
-    }
-    else  { 
-        proxyUrl = reqProcessor.processRequestAuthID(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
-    }
+    proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
     
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);
@@ -76,10 +64,20 @@ app.all("/api/geocoder/*", asyncMiddleware(async(req, res) => {
 }));
 
 function buildHereApiUrl(req) {
-    if (req.url.indexOf("reversegeocode") >= 0) {
-        return HERE_REVERSE_GEOCODER_URL;
-    } else {
-        return HERE_GEOCODER_URL;
-    }
-}
 
+if (req.url.indexOf("discover") >= 0) {
+    return HERE_DISCOVER_URL;
+} else if (req.url.indexOf("autosuggest") >= 0) {
+    return HERE_AUTOSUGGEST_URL;
+}
+else if (req.url.indexOf("browse") >= 0) {
+    return HERE_BROWSE_URL;
+}
+else if (req.url.indexOf("lookup") >= 0) {
+    return HERE_LOOKUP_URL;
+}
+else if (req.url.indexOf("revgeocode") >= 0) {
+    return HERE_REVGEOCODE_URL;
+}
+return HERE_GEOCODE_URL;
+}

@@ -37,7 +37,7 @@ app.use(compression());
 module.exports = serverlessHandler(app);
 
 // API URL
-const ROUTE_URL = config.authUrls.HERE_ROUTING_URL;
+const CALCULATE_ROUTE_URL = config.authUrls.HERE_CALCULATE_ROUTE_URL;
 const ISOLINE_URL = config.authUrls.HERE_ROUTING_ISOLINE_URL;
 const MATRIX_URL = config.authUrls.HERE_ROUTING_MATRIX_URL;
 
@@ -68,7 +68,7 @@ function buildHereApiUrl(req) {
     } else if (req.url.indexOf("calculatematrix") > 0) {
         return MATRIX_URL;
     } else {
-        return ROUTE_URL;
+        return CALCULATE_ROUTE_URL;
     }
 
 }

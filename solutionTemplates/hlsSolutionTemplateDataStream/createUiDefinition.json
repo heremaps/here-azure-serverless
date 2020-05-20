@@ -58,9 +58,6 @@
     }],
     "outputs": {
       "location": "[location()]",
-      "authType": "apikey",
-      "hereAPP_ID": "",
-      "hereAPP_CODE": "",
       "hereAPI_KEY": "[steps('hereConfig').hereAPI_KEY]",
       "storageName": "[steps('hereConfig').storageConfig.name]",
       "storageAccountType": "[steps('hereConfig').storageConfig.type]",

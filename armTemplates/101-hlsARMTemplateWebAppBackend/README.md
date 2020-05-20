@@ -27,6 +27,5 @@ Queue Names for each API are as below, client app is expected to check queue's e
 * Geocoder    : `geocoder_queue_in`
 * Map Image   : `map_image_queue_in`
 * Map Tile    : `map_tile_queue_in`
-* Places      : `places_queue_in`
 * Positioning : `positioning_queue_in`
 * Routing     : `routing_queue_in`

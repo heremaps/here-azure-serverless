@@ -5,6 +5,7 @@
   "description": "Azure Serverless HTTP Trigger Function for HERE Map Tile API",
   "main": "index.js",
   "scripts": {
+    "start": "func start",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": {

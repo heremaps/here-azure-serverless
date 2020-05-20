@@ -32,14 +32,18 @@ const compression = require("compression");
 // HERE credentials API Key
 const HERE_API_KEY = process.env.HERE_API_KEY;
 
-const HERE_GEOCODER_URL = config.authUrls.HERE_GEOCODER_URL;
-const HERE_REVERSE_GEOCODER_URL = config.authUrls.HERE_REVERSE_GEOCODER_URL;
+const HERE_GEOCODE_URL = config.authUrls.HERE_GEOCODE_URL;
+const HERE_DISCOVER_URL = config.authUrls.HERE_DISCOVER_URL;
+const HERE_AUTOSUGGEST_URL = config.authUrls.HERE_AUTOSUGGEST_URL;
+const HERE_BROWSE_URL = config.authUrls.HERE_BROWSE_URL;
+const HERE_LOOKUP_URL = config.authUrls.HERE_LOOKUP_URL
+const HERE_REVGEOCODE_URL = config.authUrls.HERE_REVGEOCODE_URL
 
 // Binds the express app to an Azure Function handler
 app.use(compression());
 module.exports = serverlessHandler(app);
 
-app.all("/api/geocoder/*", asyncMiddleware(async(req, res) => {
+app.all("/api/geocoder/*", asyncMiddleware(async (req, res) => {
 
     // Find if the call is for geocoder/reverse-geocoder.
     let HERE_API_URL = buildHereApiUrl(req);
@@ -49,7 +53,7 @@ app.all("/api/geocoder/*", asyncMiddleware(async(req, res) => {
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials.
     let proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
-    
+
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);
 
@@ -59,10 +63,21 @@ app.all("/api/geocoder/*", asyncMiddleware(async(req, res) => {
 }));
 
 function buildHereApiUrl(req) {
-    if (req.url.indexOf("reversegeocode") >= 0) {
-        return HERE_REVERSE_GEOCODER_URL;
-    } else {
-        return HERE_GEOCODER_URL;
+    if (req.url.indexOf("discover") >= 0) {
+        return HERE_DISCOVER_URL;
+    } else if (req.url.indexOf("autosuggest") >= 0) {
+        return HERE_AUTOSUGGEST_URL;
     }
+    else if (req.url.indexOf("browse") >= 0) {
+        return HERE_BROWSE_URL;
+    }
+    else if (req.url.indexOf("lookup") >= 0) {
+        return HERE_LOOKUP_URL;
+    }
+    else if (req.url.indexOf("revgeocode") >= 0) {
+        return HERE_REVGEOCODE_URL;
+    }
+    return HERE_GEOCODE_URL;
+
 }
 

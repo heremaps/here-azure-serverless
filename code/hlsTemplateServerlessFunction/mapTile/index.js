@@ -29,10 +29,7 @@ const loggers = require("../hereLibs/logger");
 const app = require("express")();
 const compression = require("compression");
 
-// HERE credentials App_Code and App_Id
-const HERE_AUTH_TYPE = process.env.HERE_AUTH_TYPE;
-const HERE_APP_CODE = process.env.HERE_APP_CODE;
-const HERE_APP_ID = process.env.HERE_APP_ID;
+// HERE credentials for App_Key
 const HERE_API_KEY = process.env.HERE_API_KEY;
 
 // Binds the express app to an Azure Function handler
@@ -40,23 +37,11 @@ app.use(compression());
 module.exports = serverlessHandler(app);
 
 // API URL
-let HERE_MAPTILE_AERIAL_URL = "";
-let HERE_MAPTILE_BASE_URL = "";
-let HERE_MAPTILE_PANO_URL = "";
-let HERE_MAPTILE_TRAFFIC_URL = "";
+let HERE_MAPTILE_AERIAL_URL = config.authUrls.HERE_MAPTILE_AERIAL_URL;
+let HERE_MAPTILE_BASE_URL = config.authUrls.HERE_MAPTILE_BASE_URL;
+let HERE_MAPTILE_PANO_URL = config.authUrls.HERE_MAPTILE_PANO_URL;
+let HERE_MAPTILE_TRAFFIC_URL = config.authUrls.HERE_MAPTILE_TRAFFIC_URL;
 
-if (  HERE_AUTH_TYPE == "apikey") {
-    HERE_MAPTILE_AERIAL_URL = config.authUrls.HERE_MAPTILE_AERIAL_URL;
-    HERE_MAPTILE_BASE_URL = config.authUrls.HERE_MAPTILE_BASE_URL;
-    HERE_MAPTILE_PANO_URL = config.authUrls.HERE_MAPTILE_PANO_URL;
-    HERE_MAPTILE_TRAFFIC_URL = config.authUrls.HERE_MAPTILE_TRAFFIC_URL;
-}
-else { 
-    HERE_MAPTILE_AERIAL_URL = config.urls.HERE_MAPTILE_AERIAL_URL;
-    HERE_MAPTILE_BASE_URL = config.urls.HERE_MAPTILE_BASE_URL;
-    HERE_MAPTILE_PANO_URL = config.urls.HERE_MAPTILE_PANO_URL;
-    HERE_MAPTILE_TRAFFIC_URL = config.urls.HERE_MAPTILE_TRAFFIC_URL;
-}
 let proxyUrl = "";
 
 app.all("/api/map_tile/*", asyncMiddleware(async(req, res) => {
@@ -68,12 +53,7 @@ app.all("/api/map_tile/*", asyncMiddleware(async(req, res) => {
     let logger = loggers.getLogger(req);
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials. 
-    if (  HERE_AUTH_TYPE == "apikey") {
-        proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
-    }
-    else  { 
-        proxyUrl = reqProcessor.processRequestAuthID(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
-    }
+    proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
 
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);

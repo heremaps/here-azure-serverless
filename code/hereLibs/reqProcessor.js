@@ -93,33 +93,33 @@ async function getAPIResult(log, req, proxyUrl) {
 }
 
 // Dynamically build HERE API URL to be used by various apis.
-function buildHereApiUrl(req,authType) {
+function buildHereApiUrl(req) {
     var url = ""
 
     switch (req.api) {
-        case "places":
-            url = getPlacesApiUrl(authType);
-            break;
         case "routing":
-            url = getRoutingApiUrl(req,authType);
+            url = getRoutingApiUrl(req);
             break;
         case "positioning":
-            url = getPositioningApiUrl(authType);
+            url = getPositioningApiUrl();
             break;
         case "map_tile/aerial":
         case "map_tile/base":
         case "map_tile/pano":
         case "map_tile/traffic":
-            url = getMapTileApiUrl(req,authType);
+            url = getMapTileApiUrl(req);
             break;
         case "fleet":
-            url = getFleetTelematicsUrl(authType);
+            url = getFleetTelematicsUrl();
             break;
         case "map_image":
-            url = getMapImageUrl(authType);
+            url = getMapImageUrl();
             break;
         case "geocoder":
-            url = getGeocoderUrl(req,authType);
+            url = getGeocoderUrl(req);
+            break;
+        case "public_transit":
+            url = getPublicTransitApiUrl();
             break;
 
         default:
@@ -130,96 +130,70 @@ function buildHereApiUrl(req,authType) {
     req._config.HERE_API_URL = url;
     return true;
 }
-function getUrlSource(authType){
-    if ( authType == "apikey" ) {
-        return config.authUrls;
-    }else {
-        return config.urls;
-    }
-}
-function getRoutingApiUrl(req,authType) {
-   
+
+function getRoutingApiUrl(req) {
+
     var url = ""
     if (req.url.indexOf("calculateisoline") > 0) {
-        url = getUrlSource(authType).HERE_ROUTING_ISOLINE_URL;
+        url = config.authUrls.HERE_ROUTING_ISOLINE_URL;
     } else if (req.url.indexOf("calculatematrix") > 0) {
-        url = getUrlSource(authType).HERE_ROUTING_MATRIX_URL;
+        url = config.authUrls.HERE_ROUTING_MATRIX_URL;
     } else {
-        url = getUrlSource(authType).HERE_ROUTING_URL;
+        url = config.authUrls.HERE_CALCULATE_ROUTE_URL;
     }
     return url;
 }
 
-function getPlacesApiUrl(authType) {
-    return getUrlSource(authType).HERE_PLACES_URL;
+
+function getPositioningApiUrl() {
+    return config.authUrls.HERE_POS_URL;
 }
 
-function getPositioningApiUrl(authType) {
-    return getUrlSource(authType).HERE_POS_URL;
-}
-
-function getMapTileApiUrl(req,authType) {
+function getMapTileApiUrl(req) {
 
     let randomServer = chooseRandomServer();
     if (req.api == "map_tile/aerial") {
-        return getUrlSource(authType).HERE_MAPTILE_AERIAL_URL.replace("1TO4", randomServer.toString())
+        return config.authUrls.HERE_MAPTILE_AERIAL_URL.replace("1TO4", randomServer.toString())
     } else if (req.api == "map_tile/base") {
-        return getUrlSource(authType).HERE_MAPTILE_BASE_URL.replace("1TO4", randomServer.toString());
+        return config.authUrls.HERE_MAPTILE_BASE_URL.replace("1TO4", randomServer.toString());
     } else if (req.api == "map_tile/pano") {
-        return getUrlSource(authType).HERE_MAPTILE_PANO_URL.replace("1TO4", randomServer.toString());
+        return config.authUrls.HERE_MAPTILE_PANO_URL.replace("1TO4", randomServer.toString());
     } else if (req.api == "map_tile/traffic") {
-        return getUrlSource(authType).HERE_MAPTILE_TRAFFIC_URL.replace("1TO4", randomServer.toString());
+        return config.authUrls.HERE_MAPTILE_TRAFFIC_URL.replace("1TO4", randomServer.toString());
     }
     return "NOTFOUND" // Default to ""(empty str) .
 }
 
-function getFleetTelematicsUrl(authType) {
-    return getUrlSource(authType).HERE_FLEET_TELEMATICS_URL;
+function getFleetTelematicsUrl() {
+    return config.authUrls.HERE_FLEET_TELEMATICS_URL;
 }
 
-function getMapImageUrl(authType) {
-    return getUrlSource(authType).HERE_MAP_IMAGE_URL
+function getMapImageUrl() {
+    return config.authUrls.HERE_MAP_IMAGE_URL
 }
 
-function getGeocoderUrl(req,authType) {
-    if (req.url.indexOf("reversegeocode") >= 0) {
-        return getUrlSource(authType).HERE_REVERSE_GEOCODER_URL;
-    } else {
-        return getUrlSource(authType).HERE_GEOCODER_URL;
+function getGeocoderUrl(req) {
+    if (req.url.indexOf("discover") >= 0) {
+        return config.authUrls.HERE_DISCOVER_URL;
+    } else if (req.url.indexOf("autosuggest") >= 0) {
+        return config.authUrls.HERE_AUTOSUGGEST_URL;
     }
-}
-
-function processRequestAuthID(log, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL) {
-
-    // Log Environment Variable & Values.
-    log(`[HERE_APP_ID]            : [${HERE_APP_ID}]`);
-    log(`[HERE_APP_CODE]          : [${HERE_APP_CODE}]`);
-
-    // Find the passed parameters in url.
-    log(`[Original Query params]  : [${JSON.stringify(req.params[0])}]`);
-
-    log(`[Request Query String]   : [${JSON.stringify(req.query,null,4)}]`);
-    log(`[Request RAW QueryString]: [${req._parsedUrl.query}]`);
-
-    log(`[Request Method]         : [${req.method}]`);
-    log(`[Request ContentType]    : [${req.headers['content-type']}]`);
-
-    // Prepare proxy-URL ( for here api )
-    let here_query_string = req._parsedUrl.query;
-    if (req._parsedUrl.query == null) {
-        here_query_string = ""
+    else if (req.url.indexOf("browse") >= 0) {
+        return config.authUrls.HERE_BROWSE_URL;
     }
-    let proxy_url = `${HERE_API_URL}${req.params[0]}?app_id=${HERE_APP_ID}&app_code=${HERE_APP_CODE}` + "&" + here_query_string;
-
-    log(`[Orginal URL]            : [${JSON.stringify(req.url)}]`);
-
-    // Sanitize proxy URL, its requried for map-tile for now.
-    proxy_url = sanitizieUrl(proxy_url);
-    log(`[Proxy   URL]            : [${proxy_url}]`);
-    log(`[Proxy Body ]            : [${JSON.stringify(req.body,null,4)}]`);
-
-    return proxy_url;
+    else if (req.url.indexOf("lookup") >= 0) {
+        return config.authUrls.HERE_LOOKUP_URL;
+    }
+    else if (req.url.indexOf("revgeocode") >= 0) {
+        return gconfig.authUrls.HERE_REVGEOCODE_URL;
+    }
+    return config.authUrls.HERE_GEOCODE_URL;
 }
+
+function getPublicTransitApiUrl(){
+    return config.authUrls.HERE_PUBLIC_TRANSIT_URL;
+}
+
 function processRequestAuthKey(log, req, HERE_API_KEY, HERE_API_URL) {
 
     // Log Environment Variable & Values.
@@ -229,7 +203,7 @@ function processRequestAuthKey(log, req, HERE_API_KEY, HERE_API_URL) {
     // Find the passed parameters in url.
     log(`[Original Query params]  : [${JSON.stringify(req.params[0])}]`);
 
-    log(`[Request Query String]   : [${JSON.stringify(req.query,null,4)}]`);
+    log(`[Request Query String]   : [${JSON.stringify(req.query, null, 4)}]`);
     log(`[Request RAW QueryString]: [${req._parsedUrl.query}]`);
 
     log(`[Request Method]         : [${req.method}]`);
@@ -247,7 +221,7 @@ function processRequestAuthKey(log, req, HERE_API_KEY, HERE_API_URL) {
     // Sanitize proxy URL, its requried for map-tile for now.
     proxy_url = sanitizieUrl(proxy_url);
     log(`[Proxy   URL]            : [${proxy_url}]`);
-    log(`[Proxy Body ]            : [${JSON.stringify(req.body,null,4)}]`);
+    log(`[Proxy Body ]            : [${JSON.stringify(req.body, null, 4)}]`);
 
     return proxy_url;
 }
@@ -322,7 +296,7 @@ function sanitizieUrl(url) {
         return url.replace("maps.api.here.com//pano/", "maps.api.here.com/")
     } else if (url.indexOf("maps.api.here.com//traffic/") > 0) {
         return url.replace("maps.api.here.com//traffic/", "maps.api.here.com/")
-    } 
+    }
     // URL supported for ApiKey 
     else if (url.indexOf("maps.ls.hereapi.com/aerial/") > 0) {
         return url.replace("maps.ls.hereapi.com/aerial/", "maps.ls.hereapi.com/")
@@ -346,7 +320,6 @@ function sanitizieUrl(url) {
 }
 
 module.exports = {
-    processRequestAuthID: processRequestAuthID,
     processRequestAuthKey: processRequestAuthKey,
     sendResponse: sendResponse,
     classifyRespFormat: classifyRespFormat,

@@ -2,16 +2,7 @@
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "authType" :{
-            "type" : "string"
-        },
         "hereAPI_KEY": {
-            "type": "String"
-        },
-        "hereAPP_ID": {
-            "type": "String"
-        },
-        "hereAPP_CODE": {
             "type": "String"
         },
         "StorageAccountNewOrExisting": {
@@ -49,7 +40,8 @@
         "functionAppName1": "[concat('app1', uniqueString(resourceGroup().id))]",
         "functionAppName2": "[concat('app2', uniqueString(resourceGroup().id))]"
     },
-    "resources": [{
+    "resources": [
+        {
             "type": "Microsoft.Storage/storageAccounts",
             "apiVersion": "2018-11-01",
             "name": "[parameters('storageName')]",
@@ -79,7 +71,8 @@
                             "*"
                         ]
                     },
-                    "appSettings": [{
+                    "appSettings": [
+                        {
                             "name": "AzureWebJobsDashboard",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2018-11-01').keys[0].value)]"
                         },
@@ -104,18 +97,6 @@
                             "value": "10.14.1"
                         },
                         {
-                            "name": "HERE_AUTH_TYPE",
-                            "value": "[parameters('authType')]"
-                        },
-                        {
-                            "name": "HERE_APP_ID",
-                            "value": "[parameters('hereAPP_ID')]"
-                        },
-                        {
-                            "name": "HERE_APP_CODE",
-                            "value": "[parameters('hereAPP_CODE')]"
-                        },
-                        {
                             "name": "HERE_API_KEY",
                             "value": "[parameters('hereAPI_KEY')]"
                         }
@@ -123,18 +104,20 @@
                 },
                 "clientAffinityEnabled": false
             },
-            "resources": [{
-                "type": "extensions",
-                "apiVersion": "2018-11-01",
-                "name": "MSDeploy",
-                "dependsOn": [
-                    "[resourceId('Microsoft.Web/Sites', variables('functionAppName1'))]"
-                ],
-                "properties": {
-                    "packageUri": "[parameters('functionZipPackageUrl')]"
-                },
-                "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
-            }],
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2018-11-01",
+                    "name": "MSDeploy",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', variables('functionAppName1'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "[parameters('functionZipPackageUrl')]"
+                    },
+                    "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
+                }
+            ],
             "condition": "[equals(parameters('StorageAccountNewOrExisting'),'new')]"
         },
         {
@@ -151,7 +134,8 @@
                             "*"
                         ]
                     },
-                    "appSettings": [{
+                    "appSettings": [
+                        {
                             "name": "AzureWebJobsDashboard",
                             "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',parameters('storageName'),';AccountKey=',listKeys(resourceId(subscription().subscriptionId,parameters('storageAccountExistingRG'),'Microsoft.Storage/storageAccounts', parameters('storageName')), '2018-11-01').keys[0].value)]"
                         },
@@ -176,18 +160,6 @@
                             "value": "10.14.1"
                         },
                         {
-                            "name": "HERE_AUTH_TYPE",
-                            "value": "[parameters('authType')]"
-                        },
-                        {
-                            "name": "HERE_APP_ID",
-                            "value": "[parameters('hereAPP_ID')]"
-                        },
-                        {
-                            "name": "HERE_APP_CODE",
-                            "value": "[parameters('hereAPP_CODE')]"
-                        },
-                        {
                             "name": "HERE_API_KEY",
                             "value": "[parameters('hereAPI_KEY')]"
                         }
@@ -195,18 +167,20 @@
                 },
                 "clientAffinityEnabled": false
             },
-            "resources": [{
-                "type": "extensions",
-                "apiVersion": "2018-11-01",
-                "name": "MSDeploy",
-                "dependsOn": [
-                    "[resourceId('Microsoft.Web/Sites', variables('functionAppName2'))]"
-                ],
-                "properties": {
-                    "packageUri": "[parameters('functionZipPackageUrl')]"
-                },
-                "condition": "[equals(parameters('StorageAccountNewOrExisting'),'existing')]"
-            }],
+            "resources": [
+                {
+                    "type": "extensions",
+                    "apiVersion": "2018-11-01",
+                    "name": "MSDeploy",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/Sites', variables('functionAppName2'))]"
+                    ],
+                    "properties": {
+                        "packageUri": "[parameters('functionZipPackageUrl')]"
+                    },
+                    "condition": "[equals(parameters('StorageAccountNewOrExisting'),'existing')]"
+                }
+            ],
             "condition": "[equals(parameters('StorageAccountNewOrExisting'),'existing')]"
         }
     ]

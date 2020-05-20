@@ -1,6 +1,6 @@
-# HERE Location Services for Microsoft Azure
+## HERE Location Services for Microsoft Azure
 
-## Introduction
+### Introduction
 
 This project provides [Azure Functions](https://azure.microsoft.com/en-in/services/functions/) as **proxies** for several of the [HERE Location Services APIs](https://developer.here.com/documentation). These Azure Functions are packaged as per the [Azure Resource Manager Template](https://docs.microsoft.com/en-us/azure/azure-resource-manager/resource-group-overview).
 
@@ -24,29 +24,27 @@ The following examples show the types of applications deployed with Azure Server
 
 ![Architecture](images/webapp_backend.png)
 
-## Requirements
+### Requirements
 
 You must obtain HERE API credentials to call HERE Maps APIs through the proxies in this project. You can start by obtaining a [Freemium plan](https://developer.here.com/plans?utm_medium=referral&utm_source=azure_marketplace_hlsfuntions&create=Freemium-Basic).
 
-## List of APIs with Azure Functions Proxies
+### List of APIs with Azure Functions Proxies
 
-* [Geocoding](https://developer.here.com/documentation/geocoder/topics/introduction.html)
-* [Map Image](https://developer.here.com/documentation/map-image/topics/introduction.html)
-* [Map Tile](https://developer.here.com/documentation/map-tile/topics/introduction.html)
-* [Places](https://developer.here.com/documentation/places/topics/introduction.html)
-* [Positioning](https://developer.here.com/documentation/positioning/topics/introduction.html)
-* [Routing](https://developer.here.com/documentation/routing/topics/overview.html)
+* [Geocoding and Search API v7](https://developer.here.com/documentation/geocoding-search-api/dev_guide/index.html.html)
+* [Map Image API](https://developer.here.com/documentation/map-image/topics/introduction.html)
+* [Map Tile API](https://developer.here.com/documentation/map-tile/topics/introduction.html)
+* [Positioning API](https://developer.here.com/documentation/positioning/topics/introduction.html)
+* [Routing API v8](https://developer.here.com/documentation/routing/topics/overview.html)
 * [Fleet Telematics](https://developer.here.com/documentation/fleet-telematics/dev_guide/index.html)
+* [Public Transit API v8](https://developer.here.com/documentation/public-transit/dev_guide/index.html)
 
-## Setup
+### Setup
 
 ### Step 1: Register for an API Key
 
-Visit the [HERE Location Suite Freemium Plan](https://developer.here.com/plans?utm_medium=referral&utm_source=azure_marketplace_hlsfuntions&create=Freemium-Basic) to obtain an `apikey` OR `app_id` and `app_code`.
+Visit the [HERE Location Suite Freemium Plan](https://developer.here.com/plans?utm_medium=referral&utm_source=azure_marketplace_hlsfuntions&create=Freemium-Basic) to obtain an `apikey`.
 
 `apikey` is used to identify and authenticate your application.
-`app_id` uniquely identifies your application.
-`app_code` is used in the authentication process to identify a session.
 
 ### Step 2: Register for an Azure Account
 
@@ -122,32 +120,86 @@ For more information, refer to [Azure Function HTTP Trigger & Bindings](https://
 
 The following examples do not include keys. To provide a key, you use a URL parameter `&code=<function/host-key>` or add a HTTP header `x-functions-key` as part of the request.
 
-## HERE Maps APIs with Function Proxies
+### HERE Maps APIs with Function Proxies
 
 Each of the HERE Maps APIs listed below has one Function as a proxy.
 Below table shows how an existing HERE API URL can be mapped to Azure Function URL once deployed.
 
 Individual API examples for each API are as shown below.
 
-### Geocoding API
+### Geocoding and Search API v7
+
 URL Mapping
 
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
-|Geocoder             | `https://geocoder.ls.hereapi.com/`              |  `https://<fnAppName>.azurewebsites.net/api/geocoder/` |
-|Geocoder             | `https://geocoder.api.here.com/`                |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
+|Discover             | `https://discover.search.hereapi.com/`          |  `https://<fnAppName>.azurewebsites.net/api/geocoder/` |
+|Geocode              | `https://geocode.search.hereapi.com/`           |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
+|Autosuggest          | `https://autosuggest.search.hereapi.com/`       |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
+|Browse               | `https://browse.search.hereapi.com/`            |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
+|Lookup               | `https://lookup.search.hereapi.com/`            |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
+|Reverse Geocode      | `https://revgeocode.search.hereapi.com/`        |  `https://<fnAppName>.azurewebsites.net/api/geocoder/`
 
+An example of an HTTP GET request to HERE Geocoding and Search API & equivalent AWS Lambda Proxy:
 
-An example of a HTTP GET request to the HERE Geocoder API:  
-`https://geocoder.ls.hereapi.com/6.2/geocode.json?searchtext=425+W+Randolph+Chicago&apikey=<apikey>`  
+ An example of an HTTP GET request to discover API:
+`https://discover.search.hereapi.com/v1/discover?apikey=<apikey>&at=42.36399,-71.05493&limit=1&q=restaurant&in=countryCode:USA` 
 
-`https://geocoder.api.here.com/6.2/geocode.json?searchtext=425+W+Randolph+Chicago&appID=<appID>&app_code=<appCode>`   
+ To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
+
+ An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+ `https://<fnAppName>.azurewebsites.net/api/geocoder/v1/discover?at=42.36399,-71.05493&limit=1&q=restaurant&in=countryCode:USA&code=<fncode>`
+
+ An example of an HTTP GET request to HERE geocode API: 
+
+ `https://geocode.search.hereapi.com/v1/geocode?apikey=<apikey>&q=5 Rue Daunou, 75000 Paris, France`
+
+ To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
+
+ An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+`https://<fnAppName>.azurewebsites.net/api/geocoder/v1/geocode?q=5 Rue Daunou, 75000 Paris, France&code=<fncode>`
+
+An example of an HTTP GET request to HERE autosuggest API: 
+
+`https://autosuggest.search.hereapi.com/v1/autosuggest?apikey=<apikey>&at=52.5199813,13.3985138&q=berlin bran`
 
 To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy: 
 
-`https://<fnAppName>.azurewebsites.net/api/geocoder/6.2/geocode.json?searchtext=425+W+Randolph+Chicago`
+`https://<fnAppName>.azurewebsites.net/api/geocoder/v1/autosuggest?at=52.5199813,13.3985138&q=berlin bran&code=<fncode>`
+
+An example of an HTTP GET request to HERE browse API: 
+
+`https://browse.search.hereapi.com/v1/browse?apikey=<apikey>&at=-23.000813,-43.351629&limit=2&categories=100-1100,200-2000-0011,100-1000`
+
+To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+`https://<fnAppName>.azurewebsites.net/api/geocoder/v1/browse?at=-23.000813,-43.351629&limit=2&categories=100-1100,200-2000-0011,100-1000&code=<fncode>`
+
+ An example of an HTTP GET request to HERE lookup API: 
+
+ `https://lookup.search.hereapi.com/v1/lookup?apikey=<apikey>& id=here:pds:place:276u0vhj-b0bace6448ae4b0fbc1d5e323998a7d2`
+
+ To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
+
+ An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+ `https://<fnAppName>.azurewebsites.net/api/geocoder/v1/lookup?id=here:pds:place:276u0vhj-b0bace6448ae4b0fbc1d5e323998a7d2&code=<fncode>`
+
+ An example of an HTTP GET request to HERE revgeocode API: 
+
+ `https://revgeocode.search.hereapi.com/v1/revgeocode?apikey=<apikey>&at=48.2181679%2C16.3899064&lang=en-US`
+
+ To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example. 
+
+ An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+`https://<fnAppName>.azurewebsites.net/api/geocoder/v1/revgeocode?at=48.2181679%2C16.3899064&lang=en-US&code=<fncode>`
 
 ### Map Image API
 URL Mapping
@@ -155,72 +207,51 @@ URL Mapping
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
 |Images               | `https://image.ls.hereapi.com/`                 |  `https://<fnAppName>.azurewebsites.net/api/map_image/`
-|Images               | `https://image.maps.api.here.com/`              |  `https://<fnAppName>.azurewebsites.net/api/map_image/`
 
 An example of a HTTP GET request to the HERE Map Image API:  
 `https://image.ls.hereapi.com/mia/1.6/mapview?c=60.17675,24.929974&nodot&t=0&z=15&apikey=<apikey>`
-
-`https://image.maps.api.here.com/mia/1.6/mapview?c=60.17675,24.929974&nodot&t=0&z=15&app_id=<appID>&app_code=<appCode>`
 
 To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy:
 
-`https://<fnAppName>.azurewebsites.net/api/map_image/mia/1.6/mapview?c=60.17675,24.929974&nodot&t=0&z=15`
+`https://<fnAppName>.azurewebsites.net/api/map_image/mia/1.6/mapview?c=60.17675,24.929974&nodot&t=0&z=15&code=<fncode>`
 
 ### Map Tile API
 URL Mapping
 
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
-|MapTile              | `https://{1-4}.traffic.maps.ls.hereapi.com/`    |  `https://<fnAppName>.azurewebsites.net/api/map_tile/traffic/`
-|MapTile              | `https://{1-4}.traffic.maps.api.here.com/`      |  `https://<fnAppName>.azurewebsites.net/api/map_tile/traffic/`
-|MapTile              | `https://{1.4}.base.maps.ls.hereapi.com/`       |  `https://<fnAppName>.azurewebsites.net/api/map_tile/base/`
-|MapTile              | `https://{1.4}.base.maps.api.here.com/`         |  `https://<fnAppName>.azurewebsites.net/api/map_tile/base/`
+|Traffic              | `https://{1-4}.traffic.maps.ls.hereapi.com/`    |  `https://<fnAppName>.azurewebsites.net/api/map_tile/traffic/`
+|Base                 | `https://{1.4}.base.maps.ls.hereapi.com/`       |  `https://<fnAppName>.azurewebsites.net/api/map_tile/base/`
+|Aerial               | `https://{1.4}.aerial.maps.ls.hereapi.com/`     |  `https://<fnAppName>.azurewebsites.net/api/map_tile/aerial/`
 
-An example of a HTTP GET request to the HERE Map Tile API:  
+An example of a HTTP GET request to the HERE Traffic Map Tile API:  
 `https://1.traffic.maps.ls.hereapi.com/maptile/2.1/traffictile/newest/normal.day/11/525/761/512/jpg?pview=ARG&apikey=<apikey>`
 
-`https://1.traffic.maps.api.here.com/maptile/2.1/traffictile/newest/normal.day/11/525/761/512/jpg?pview=ARG&app_id=<app_id&app_code=<app_code>`
+To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy:
+
+`https://<fnAppName>.azurewebsites.net/api/map_tile/traffic/maptile/2.1/traffictile/newest/normal.day/11/525/761/512/jpg?pview=ARG&code=<fncode>`
+
+An example of a HTTP GET request to the HERE Base Map Tile API:  
+`https://1.base.maps.ls.hereapi.com/maptile/2.1/maptile/newest/normal.day/13/4400/2686/256/png8?apiKey=<apiKey>`
 
 To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy:
 
-`https://<fnAppName>.azurewebsites.net/api/map_tile/traffic/maptile/2.1/traffictile/newest/normal.day/11/525/761/512/jpg?pview=ARG`
+`https://<fnAppName>.azurewebsites.net/api/map_tile/base/maptile/2.1/maptile/newest/normal.day/13/4400/2686/256/png8?code=<fncode>`
 
-The Azure Function Proxy URL depends on the base URL type. For example:
-
-* https://1.traffic.maps.api.here.com/maptile/2.1/traffictile/newest
-
-    Base URL: traffic
-
-    Function Proxy URL: /api/map_tile/traffic/
-
-* https://1.base.maps.api.here.com/maptile/2.1/streettile
-
-    Base URL: base
-
-    Function Proxy URL: /api/map_tile/base/
-
-### Places API
-URL Mapping
-
-|API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
-|-------------------- |-------------------------------------------------|-----------------------------------------------------------|
-|Places               | `https://places.api.here.com/places/`           |  `https://<fnAppName>.azurewebsites.net/api/places/`
-|Places               | `https://places.ls.hereapi.com/places/`         |  `https://<fnAppName>.azurewebsites.net/api/places/`
-
-An example of a HTTP GET request to the HERE Places API:  
-`https://places.ls.hereapi.com/places/v1/autosuggest?q=NCL&in=19.6344,74.2931;r=131600;&size=3&apikey=<apikey>`
-
-`https://places.api.here.com/places/v1/autosuggest?q=NCL&in=19.6344,74.2931;r=131600;&size=3&app_id=<appID>&app_code=<appCode>`
+An example of a HTTP GET request to the HERE Aerial Map Tile API:  
+`https://1.aerial.maps.ls.hereapi.com/maptile/2.1/labeltile/newest/hybrid.day/5/5/10/256/jpg?apiKey=<apiKey>`
 
 To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy:
 
-`https://<fnAppName>.azurewebsites.net/api/places/v1/autosuggest?q=NCL&in=19.6344,74.2931;r=131600;&size=3`
+`https://<fnAppName>.azurewebsites.net/api/map_tile/aerial/maptile/2.1/labeltile/newest/hybrid.day/5/5/10/256/jpg?code=<fncode>`
 
 ### HERE Positioning API
 
@@ -230,14 +261,11 @@ URL Mapping
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
 |Positioning          | `https://pos.ls.hereapi.com/positioning/`       |  `https://<fnAppName>.azurewebsites.net/api/positioning/`
-|Positioning          | `https://pos.api.here.com/positioning/`         |  `https://<fnAppName>.azurewebsites.net/api/positioning/`
 
 An example of a HTTP POST request to the Positioning API: 
 
-`curl -i -X POST -H 'Content-Type: application/json' -d  '{ "gsm": [ {"mcc": 262,"mnc": 1,"lac": 5126,"cid": 16504,"nmr": [{"bsic": "6","bcch": "82"},{"bsic": "7","bcch": "85"},{"bsic": "12","bcch": "93"},{"bsic": "13","bcch": "88"},{"bsic": "19","bcch": "88"}]}]}' https://pos.ls.hereapi.com/positioning/v1/locate?&app_id=<app_id>&apikey=<apikey>`
+`curl -i -X POST -H 'Content-Type: application/json' -d  '{ "gsm": [ {"mcc": 262,"mnc": 1,"lac": 5126,"cid": 16504,"nmr": [{"bsic": "6","bcch": "82"},{"bsic": "7","bcch": "85"},{"bsic": "12","bcch": "93"},{"bsic": "13","bcch": "88"},{"bsic": "19","bcch": "88"}]}]}' https://pos.ls.hereapi.com/positioning/v1/locate?apikey=<apikey>`
 
-
-`curl -i -X POST -H 'Content-Type: application/json' -d  '{ "gsm": [ {"mcc": 262,"mnc": 1,"lac": 5126,"cid": 16504,"nmr": [{"bsic": "6","bcch": "82"},{"bsic": "7","bcch": "85"},{"bsic": "12","bcch": "93"},{"bsic": "13","bcch": "88"},{"bsic": "19","bcch": "88"}]}]}' https://pos.api.here.com/positioning/v1/locate?&app_id=<app_id>&app_code=<app_code>`
 
 An example of a HTTP POST request to the equivalent Azure Function Proxy:
 
@@ -248,40 +276,92 @@ URL Mapping
 
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
-|Routing              | `https://route.ls.hereapi.com/`                 |  `https://<fnAppName>.azurewebsites.net/api/routing/`
-|Routing              | `https://route.api.here.com/`                   |  `https://<fnAppName>.azurewebsites.net/api/routing/`
+|CalculateRoute       | `https://router.hereapi.com/`                 |  `https://<fnAppName>.azurewebsites.net/api/routing/`
+|Routing(Isoline)     | `https://isoline.route.ls.hereapi.com/`       |  `https://<fnAppName>.azurewebsites.net/api/routing/isoline.route/`
+|Routing(Matrix)      | `https://matrix.route.ls.hereapi.com/`        |  `https://<fnAppName>.azurewebsites.net/api/routing/matrix.route/`
 
-An example of a HTTP GET request to the HERE Routing API:  
-`https://route.ls.hereapi.com/routing/7.2/calculateroute.xml?waypoint0=geo!52.5,13.4&waypoint1=geo!52.5,13.45&departure=now&mode=fastest;publicTransport&combineChange=true&apikey=<apikey>`
+ An example of an HTTP GET request to HERE CalculateRoute API:
+ `https://router.hereapi.com/v8/routes?apikey=<apiKey>&transportMode=car&origin=52.5308,13.3847&destination=52.5323,13.3789&return=summary`
 
-`https://route.api.here.com/routing/7.2/calculateroute.xml?waypoint0=geo!52.5,13.4&waypoint1=geo!52.5,13.45&departure=now&mode=fastest;publicTransport&combineChange=true&app_id=<app_id>&app_code=<app_code>`
-
-To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
+  To call the Lambda proxy instead, replace the original URL with the API Gateway URL, change the type, resourcePath and Query String Parameters as follows:
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy: 
 
-`https://<fnAppName>.azurewebsites.net/api/routing/7.2/calculateroute.xml?waypoint0=geo!52.5,13.4&waypoint1=geo!52.5,13.45&departure=now&mode=fastest;publicTransport&combineChange=true`
+`https://<fnAppName>.azurewebsites.net/api/routing/v8/routes/?transportMode=car&origin=52.5308,13.3847&destination=52.5323,13.3789&return=summary&code=<fncode>`
 
-### HERE Fleet Telematics
+An example of an HTTP GET request to HERE Routing(Isoline) API:
+ `https://isoline.route.ls.hereapi.com/routing/7.2/calculateisoline.json?apiKey=<apiKey>&mode=fastest%3Bpedestrian&start=52.5160%2C13.3778&rangetype=distance&range=2000`
+
+  To call the Lambda proxy instead, replace the original URL with the API Gateway URL, change the type, resourcePath and Query String Parameters as follows:
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+`https://<fnAppName>.azurewebsites.net/api/routing/7.2/calculateisoline.json?mode=fastest%3Bpedestrian&start=52.5160%2C13.3778&rangetype=distance&range=2000&code=<fncode>`
+
+
+ An example of an HTTP GET request to HERE Routing(Matrix) API:
+ `https://matrix.route.ls.hereapi.com/routing/7.2/calculatematrix.json?apiKey=<apiKey>&mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=40.7790%2C-73.9622&destination0=40.7482%2C-73.9860&destination1=40.7558%2C-73.9870&destination2=40.7054%2C-73.9961`
+
+  To call the Lambda proxy instead, replace the original URL with the API Gateway URL, change the type, resourcePath and Query String Parameters as follows:
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy: 
+
+`https://<fnAppName>.azurewebsites.net/api/routing/7.2/calculatematrix.json?mode=fastest%3Btruck%3Btraffic%3Adisabled%3B&start0=40.7790%2C-73.9622&destination0=40.7482%2C-73.9860&destination1=40.7558%2C-73.9870&destination2=40.7054%2C-73.9961&code=<fncode>`
+
+ ### HERE Fleet Telematics
 URL Mapping
 
 |API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
 |-------------------- |-------------------------------------------------|-----------------------------------------------------------|
 |Fleet Telematics     | `https://fleet.ls.hereapi.com/`                 |  `https://<fnAppName>.azurewebsites.net/api/fleet`
-|Fleet Telematics     | `https://fleet.api.here.com/`                   |  `https://<fnAppName>.azurewebsites.net/api/fleet`
 
 An example of a HTTP GET request to the HERE Fleet Telematics API:  
-`https://fleet.ls.hereapi.com/2/findsequence.json?departure=2018-12-20T16:52:00Z&destination1=40.7589836120605%2C-73.9747695922852;st:900;acc:mo09:30:00Z|fr12:00:00Z&destination2=40.5741%2C-74.3309;st:900;at:2018-12-25T16:00:00Z&mode=shortest;car&start=39.9558%2C-75.1820&end=40.0832%2C-74.0682&apikey=<apikey>`
-
-`https://fleet.api.here.com/2/findsequence.json?departure=2018-12-20T16:52:00Z&destination1=40.7589836120605%2C-73.9747695922852;st:900;acc:mo09:30:00Z|fr12:00:00Z&destination2=40.5741%2C-74.3309;st:900;at:2018-12-25T16:00:00Z&mode=shortest;car&start=39.9558%2C-75.1820&end=40.0832%2C-74.0682&app_id=<appID>&app_code=<appCode>`
+`https://fleet.ls.hereapi.com/2/calculateroute.json?apiKey=<apiKey>&waypoint0=50.112698%2C8.675777&waypoint1=48.544180%2C9.662530&mode=fastest%3Bcar%3Btraffic%3Adisabled`
 
 To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
 
 An example of a HTTP GET request to the equivalent Azure Function Proxy:
 
-`https://<fnAppName>.azurewebsites.net/api/fleet/2/findsequence.json?departure=2018-12-20T16:52:00Z&destination1=40.7589836120605%2C-73.9747695922852;st:900;acc:mo09:30:00Z|fr12:00:00Z&destination2=40.5741%2C-74.3309;st:900;at:2018-12-25T16:00:00Z&mode=shortest;car&start=39.9558%2C-75.1820&end=40.0832%2C-74.0682`
+`https://<fnAppName>.azurewebsites.net/api/fleet/2/calculateroute.json?waypoint0=50.112698%2C8.675777&waypoint1=48.544180%2C9.662530&mode=fastest%3Bcar%3Btraffic%3Adisabled&code=<fncode>`
 
-## License
+### HERE Public Transit API V8
+URL Mapping
+
+|API                  | HERE URL Prefix                                 |  Azure Function App URL Prefix |
+|-------------------- |-------------------------------------------------|-----------------------------------------------------------|
+|Next Departures      | `https://transit.hereapi.com/v8/departures`     |  `https://<fnAppName>.azurewebsites.net/api/public_transit/departures`
+|Station Search       | `https://transit.hereapi.com/v8/stations`       |  `https://<fnAppName>.azurewebsites.net/api/public_transit/stations`
+|Routing              | `https://transit.hereapi.com/v8/routes`         |  `https://<fnAppName>.azurewebsites.net/api/public_transit/routes`
+
+An example of a HTTP GET request to the HERE Next Departures API: 
+
+`https://transit.hereapi.com/v8/departures?in=41.900138,12.501924;r=500&apikey=<apikey>`
+
+To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy:
+
+`https://<fnAppName>.azurewebsites.net/api/public_transit/departures?in=41.900138,12.501924;r=500&code=<fncode>`
+
+An example of a HTTP GET request to HERE Station Search API:  
+`https:/transit.hereapi.com/v8/stations?apiKey=<apiKey>&in=41.90123,12.500912`
+
+To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy:
+
+`https://<fnAppName>.azurewebsites.net/api/public_transit/stations?in=41.90123,12.500912&code=<fncode>`
+
+An example of a HTTP GET request to the HERE Transit Routing API:  
+`https://transit.hereapi.com/v8/routes?origin=14.46734,78.85423&destination=1.90096,12.50243&apikey=<apikey>`
+
+To call the Function Proxy, replace the original URL with the API Gateway URL and change the Query String Parameters as shown in the following example.
+
+An example of a HTTP GET request to the equivalent Azure Function Proxy:
+
+`https://<fnAppName>.azurewebsites.net/api/public_transit/routes?origin=14.46734,78.85423&destination=1.90096,12.50243&code=<fncode>`
+
+### License
 
 Copyright (C) 2019 HERE Europe B.V.
 

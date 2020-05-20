@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-// Azure Serverless Function for HERE Places API
+// Azure Serverless Function for HERE positioning API
 
 'use strict';
 
@@ -32,7 +32,7 @@ const compression = require("compression");
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 
-// HERE credentials App_Code and App_Id
+// HERE credentials Api_key
 const HERE_API_KEY = process.env.HERE_API_KEY;
 
 // Binds the express app to an Azure Function handler

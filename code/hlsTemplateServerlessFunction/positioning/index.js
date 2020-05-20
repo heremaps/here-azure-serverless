@@ -17,7 +17,7 @@
  * License-Filename: LICENSE
  */
 
-// Azure Serverless Function for HERE Places API
+// Azure Serverless Function for HERE positioning API
 
 'use strict';
 
@@ -32,22 +32,16 @@ const compression = require("compression");
 var bodyParser = require('body-parser');
 app.use(bodyParser.json())
 
-// HERE credentials App_Code and App_Id
-const HERE_AUTH_TYPE = process.env.HERE_AUTH_TYPE;
-const HERE_APP_CODE = process.env.HERE_APP_CODE;
-const HERE_APP_ID = process.env.HERE_APP_ID;
+// HERE credentials Api_key
 const HERE_API_KEY = process.env.HERE_API_KEY;
 
 // Binds the express app to an Azure Function handler
 app.use(compression());
 module.exports = serverlessHandler(app);
 
-//API URL
-let HERE_API_URL = config.urls.HERE_POS_URL;
 // API URL
-if (  HERE_AUTH_TYPE == "apikey") {
-    HERE_API_URL = config.authUrls.HERE_POS_URL;
-}
+let HERE_API_URL = config.authUrls.HERE_POS_URL;
+
 let proxyUrl = "";
 app.all("/api/positioning/*", asyncMiddleware(async(req, res) => {
 
@@ -55,13 +49,8 @@ app.all("/api/positioning/*", asyncMiddleware(async(req, res) => {
     var logger = loggers.getLogger(req);
 
     // Process Request Object and Prepare Proxy URL using HERE APP Credentials. 
-    if (  HERE_AUTH_TYPE == "apikey") {
-        proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
-    }
-    else  { 
-        proxyUrl = reqProcessor.processRequestAuthID(logger, req, HERE_APP_CODE, HERE_APP_ID, HERE_API_URL);
-    }
-
+    proxyUrl = reqProcessor.processRequestAuthKey(logger, req, HERE_API_KEY, HERE_API_URL);
+    
     // Invoke Proxy URL and fetch Response, GET/POST call is decided based on incoming method.
     let result = await reqProcessor.getAPIResult(logger, req, proxyUrl);
 
