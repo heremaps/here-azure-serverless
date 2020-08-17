@@ -185,7 +185,7 @@ function getGeocoderUrl(req) {
         return config.authUrls.HERE_LOOKUP_URL;
     }
     else if (req.url.indexOf("revgeocode") >= 0) {
-        return gconfig.authUrls.HERE_REVGEOCODE_URL;
+        return config.authUrls.HERE_REVGEOCODE_URL;
     }
     return config.authUrls.HERE_GEOCODE_URL;
 }

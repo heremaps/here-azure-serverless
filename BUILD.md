@@ -60,15 +60,10 @@ These are same as ARM Templates but additionally wrapped inside solution templat
     Template : ./armTemplates/103-hlsARMTemplateServerlessFunctionFleetTelematics/azuredeploy.json
     Build zip file : ./dist/deployables/serverlesslibrary/hlsAPIFleetTelematics.zip
     ```
-* Geocoder API: 
+* Geocoding and Search API v7 : 
     ```
     Template : ./armTemplates/104-hlsARMTemplateServerlessFunctionGeocoder/azuredeploy.json
     Build zip file : ./dist/deployables/serverlesslibrary/hlsAPIGeocoder.zip
-    ```
-* Places API: 
-    ```
-    Template : ./armTemplates/105-hlsARMTemplateServerlessFunctionPlaces/azuredeploy.json
-    Build zip file : ./dist/deployables/serverlesslibrary/hlsAPIPlaces.zip
     ```
 * Positioning API: 
     ```
@@ -89,4 +84,9 @@ These are same as ARM Templates but additionally wrapped inside solution templat
     ```
     Template : ./armTemplates/109-hlsARMTemplateServerlessFunctionMapTile/azuredeploy.json
     Build zip file : ./dist/deployables/serverlesslibrary/hlsAPIMapTile.zip
+    ```
+* Public Transit API: 
+    ```
+    Template : ./armTemplates/110-hlsARMTemplateServerlessFunctionPublicTransit/azuredeploy.json
+    Build zip file : ./dist/deployables/serverlesslibrary/hlsAPIPublicTransit.zip
     ```

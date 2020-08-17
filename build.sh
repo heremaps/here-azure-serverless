@@ -89,9 +89,9 @@ mkdir -p dist/azureServerless/hlsAPIFleetTelematics
 mkdir -p dist/azureServerless/hlsAPIGeocoder
 mkdir -p dist/azureServerless/hlsAPIMapImage
 mkdir -p dist/azureServerless/hlsAPIMapTile
-mkdir -p dist/azureServerless/hlsAPIPlaces
 mkdir -p dist/azureServerless/hlsAPIPositioning
 mkdir -p dist/azureServerless/hlsAPIRouting
+mkdir -p dist/azureServerless/hlsAPIPublicTransit
 
 
 # Create deployable folder which is going to contain different zips.
@@ -108,9 +108,9 @@ cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsA
 cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIGeocoder
 cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapImage
 cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile
-cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
 cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning
 cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting
+cp $azureHLSWorkspaceDir/LICENSE $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPublicTransit
 
 # Copy code from respective places to newly create directories
 
@@ -225,7 +225,7 @@ echo "------------------------------------------------------"
 
 # 2.2 Building Geocoder API.
 echo "------------------------------------------------------"
-echo "2.2 Building ServerlessLibary Offering : 'Geocoder' function"
+echo "2.2 Building ServerlessLibary Offering : 'Geocoding and Search API v7' function"
 echo "------------------------------------------------------"
     # a. Copy content
     echo "\ta. Copying code content."
@@ -287,30 +287,9 @@ echo "------------------------------------------------------"
     cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIMapTile && 
     $zipCommandPrefix $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/hlsAPIMapTile.zip . $zipCommandSuffix
 
-# 2.5 Building Places API.
+# 2.5 Building Positioning API.
 echo "------------------------------------------------------"
-echo "2.5 Building ServerlessLibary Offering : 'Places' function"
-echo "------------------------------------------------------"
-    # a. Copy content
-    echo "\ta. Copying code content."
-    # echo "\t------------------------------"
-    cp -R $azureHLSWorkspaceDir/code/hlsAPIPlaces/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
-    cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces
-
-    # b. Installing dependencies.
-    echo "\tb. Installing npm dependencies."
-    # echo "\t------------------------------"
-    cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces && npm install > /dev/null 
-
-    # Create zip file.
-    echo "\tc. Creating Zip file "
-    # echo "\t------------------------------"
-    cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPlaces && 
-    $zipCommandPrefix $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/hlsAPIPlaces.zip . $zipCommandSuffix
-
-# 2.6 Building Positioning API.
-echo "------------------------------------------------------"
-echo "2.6 Building ServerlessLibary Offering : 'Positioning' function"
+echo "2.5 Building ServerlessLibary Offering : 'Positioning' function"
 echo "------------------------------------------------------"
     # a. Copy content
     echo "\ta. Copying code content."
@@ -329,9 +308,9 @@ echo "------------------------------------------------------"
     cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPositioning && 
     $zipCommandPrefix $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/hlsAPIPositioning.zip . $zipCommandSuffix
 
-# 2.7 Building Routing API.
+# 2.6 Building Routing API.
 echo "------------------------------------------------------"
-echo "2.7 Building ServerlessLibary Offering : 'Routing' function"
+echo "2.6 Building ServerlessLibary Offering : 'Routing' function"
 echo "------------------------------------------------------"
     # a. Copy content
     echo "\ta. Copying code content."
@@ -350,6 +329,28 @@ echo "------------------------------------------------------"
     cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIRouting && 
     $zipCommandPrefix $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/hlsAPIRouting.zip . $zipCommandSuffix
 
+#2.7 Places API has been removed as part of geocoding and searching api implementation 
+
+# 2.8 Building Public Transit API.
+echo "------------------------------------------------------"
+echo "2.8 Building ServerlessLibary Offering : 'PublicTransit' function"
+echo "------------------------------------------------------"
+    # a. Copy content
+    echo "\ta. Copying code content."
+    # echo "\t------------------------------"
+    cp -R $azureHLSWorkspaceDir/code/hlsAPIPublicTransit/* $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPublicTransit
+    cp -R $azureHLSWorkspaceDir/code/hereLibs $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPublicTransit
+
+     # b. Installing dependencies.
+    echo "\tb. Installing npm dependencies."
+    # echo "\t------------------------------"
+    cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPublicTransit && npm install > /dev/null 
+
+     # Create Zip file.
+    echo "\tc. Creating Zip file "
+    # echo "\t------------------------------"
+    cd $azureHLSWorkspaceDir/dist/azureServerless/hlsAPIPublicTransit && 
+    $zipCommandPrefix $azureHLSWorkspaceDir/dist/deployables/serverlesslibrary/hlsAPIPublicTransit.zip . $zipCommandSuffix
 
 
 # Create Marketplace publishing offer zips.
